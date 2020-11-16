@@ -1,0 +1,138 @@
+@charset "utf-8";
+/*初始化开始*/
+
+body,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,html,img,input select option,legend,li,ol,p,ul{margin:0;padding:0;font-family:arial,"Microsoft YaHei";font-weight:400;}
+body,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,html,img,input select option,legend,li,ol,p,ul{
+  font-family: Helvetica Neue,Helvetica,PingFang SC,Hiragino Sans GB,Microsoft YaHei,SimSun,sans-serif;
+}
+em,i{font-style:normal}
+fieldset,img{border:none}
+img{display:block}
+li,ol,ul{list-style:none}
+input,select,textarea{font-size:14px;margin:0;resize:none}
+textarea{resize:none}
+a{text-decoration:none}
+a:hover{text-decoration:none}
+html{min-width:1000px;height:100%}
+body{font-size:14px;color:#bacde5;font-family:arial,"微软雅黑";background-color:#1c1f24}
+a{color:#bacde5;cursor:pointer}
+a:hover{color:#fff}
+.h1,h1{font-size:18px;line-height:1.8}
+.h2,h2{font-size:16px;line-height:1.8}
+.h3,h3,p{font-size:14px;line-height:1.8}
+.h4,h4{font-size:12px;color:#B3B3B3;line-height:1.8}
+
+
+.bold{font-weight:700}
+.underline{text-decoration:underline; cursor: pointer;}
+.underline:hover{text-decoration:underline}
+.clearfix:after{content:".";display:block;height:0;visibility:hidden;clear:both}
+.clearfix{zoom:1}
+.clear{clear:both}
+.float_L{float:left}
+.float_R{float:right}
+.align_C{text-align:center}
+.align_R{text-align:right}
+.align_L{text-align:left}
+.width_100{width:100px}
+.width_200{width:200px}
+.width_250{width:250px}
+.width_260{width:260px}
+.width_300{width:300px}
+.width_auto{width:auto}
+.margin_t10{margin-top:10px}
+.margin_t15{margin-top:15px}
+.margin_t20{margin-top:20px}
+.margin_L5{margin-left:5px}
+.margin_L10{margin-left:10px}
+.margin_L15{margin-left:15px}
+.margin_R5{margin-right:5px}
+.margin_R15{margin-right:15px}
+.fw_14{font-size:14px}
+/*常用布局开始,需要什么布局直接使用如下样式，要新增基础样式必须加fn开头*/
+.fn-fb{font-weight:700}
+.fn-fs10{font-size:10px}
+.fn-fs12{font-size:12px !important }
+.fn-fs14{font-size:14px}
+.fn-fs16{font-size:16px}
+.fn-lh24{line-height:24px}
+.fn-lh32{line-height:32px}
+.fn-lh36{line-height:36px}
+.fn-lh48{line-height:48px}
+.fn-w050{width:50%}
+.fn-w075{width:75%}
+.fn-w090{width:90%}
+.fn-w100{width:100%}
+.fn-wfull{width:99%}
+.fn-m750{width:750px}
+.fn-mw750{min-width:750px}
+.fn-mw850{min-width:950px}
+.fn-mw950{min-width:950px}
+.fn-wh1010{width:1010px}
+.fn-center{margin:0 auto;text-align:center}
+.fn-m05{margin:5px}
+.fn-m10{margin:10px}
+.fn-m15{margin:15px}
+.fn-m20{margin:20px}
+.fn-mt00{margin-top:0}
+.fn-mt05{margin-top:5px}
+.fn-mt10{margin-top:10px}
+.fn-mt15{margin-top:15px}
+.fn-mt20{margin-top:20px}
+.fn-mt25{margin-top:25px}
+.fn-mt30{margin-top:30px}
+.fn-mt50{margin-top:50px}
+.fn-mb00{margin-bottom:0}
+.fn-mb05{margin-bottom:5px}
+.fn-mb10{margin-bottom:10px}
+.fn-mb15{margin-bottom:15px}
+.fn-mb20{margin-bottom:20px}
+.fn-mb30{margin-bottom:30px}
+.fn-mb60{margin-bottom:60px}
+.fn-mr5{margin-right:5px}
+.fn-mr10{margin-right:10px}
+.fn-mr15{margin-right:15px}
+.fn-mr20{margin-right:20px}
+.fn-mr40{margin-right:40px}
+.fn-ml5{margin-left:5px}
+.fn-ml10{margin-left:10px}
+.fn-ml15{margin-left:15px}
+.fn-ml20{margin-left:20px}
+.fn-ml30{margin-left:30px}
+.fn-mlr10{margin-left:10px;margin-right:10px}
+.fn-mlr15{margin-left:15px;margin-right:15px}
+.fn-p00{padding: 0;}
+.fn-p05{padding:5px}
+.fn-p10{padding:10px}
+.fn-p20{padding:20px}
+.fn-pl0{padding-left:0px}
+.fn-pl05{padding-left:5px}
+.fn-pl10{padding-left:10px}
+.fn-pl20{padding-left:20px}
+.fn-pb20{padding-bottom:20px}
+.fn-pr0{padding-right:0px}
+.fn-pr05{padding-right:5px}
+.fn-pr10{padding-right:10px}
+.fn-pr20{padding-right:20px}
+.fn-ptl10{padding:10px 0 0 10px}
+.fn-nofx{overflow-x:hidden;overflow-y:auto}
+.fn-nowrap{text-overflow:ellipsis;overflow:hidden;white-space:nowrap;word-break:break-all;word-wrap:break-word}
+.fn-pobot{clear:both;position:relative;bottom:0;left:0}
+.fn-pt0{padding-top: 0;}
+
+@font-face {
+  font-family: 'iconfont';
+  src: url('../common/iconfont/iconfont.eot');
+  src: url('../common/iconfont/iconfont.eot?#iefix') format('embedded-opentype'),
+      url('../common/iconfont/iconfont.woff2') format('woff2'),
+      url('../common/iconfont/iconfont.woff') format('woff'),
+      url('../common/iconfont/iconfont.ttf') format('truetype'),
+      url('../common/iconfont/iconfont.svg#iconfont') format('svg');
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

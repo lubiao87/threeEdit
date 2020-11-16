@@ -1,0 +1,267 @@
+﻿{
+  "serverURL": "http://data.marsgis.cn",
+
+  "map3d": {
+    "homeButton": true,
+    "sceneModePicker": true,
+    "navigationHelpButton": true,
+    "infoBox": false,
+    "vrButton": true,
+    "fullscreenButton": true,
+    "geocoder": false,
+    "showRenderLoopErrors": true,
+    "center": {
+      "y": 31.686288,
+      "x": 117.229619,
+      "z": 11333.9,
+      "heading": 359.2,
+      "pitch": -39.5,
+      "roll": 360
+    },
+    "minzoom": 1,
+    "maxzoom": 50000000,
+    "style": {
+      "atmosphere": true,
+      "lighting": false,
+      "fog": false,
+      "testTerrain": false
+    },
+    "contextmenu": true,
+    "mouseZoom": true,
+    "location": {
+      "fps": true,
+      "format": "<div>经度:{x}</div> <div>纬度:{y}</div> <div>海拔：{z}米</div> <div>方向：{heading}度</div> <div>俯仰角：{pitch}度</div>  <div>视高：{height}米</div>",
+      "crs": ""
+    },
+    "navigation": {
+      "legend": { "left": "100px", "bottom": "-1px" },
+      "compass": { "bottom": "240px", "right": "2px" }
+    },
+    "terrain": {
+      "url": "$serverURL$/terrain",
+      "visible": true
+    },
+    "basemaps": [
+      {
+        "id": 10,
+        "name": "地图底图",
+        "type": "group"
+      },
+      {
+        "pid": 10,
+        "name": "谷歌卫星",
+        "icon": "img/basemaps/google_img.png",
+        "type": "www_google",
+        "crs": "wgs84",
+        "layer": "img_d"
+      },
+      {
+        "pid": 10,
+        "name": "ArcGIS卫星",
+        "icon": "img/basemaps/esriWorldImagery.png",
+        "type": "arcgis",
+        "url": "https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer",
+        "enablePickFeatures": false
+      },
+      {
+        "pid": 10,
+        "name": "微软卫星",
+        "icon": "img/basemaps/bingAerial.png",
+        "type": "www_bing",
+        "layer": "Aerial"
+      },
+      {
+        "pid": 10,
+        "name": "天地图卫星",
+        "icon": "img/basemaps/tdt_img.png",
+        "type": "www_tdt",
+        "layer": "img_d",
+        "key": [
+          "313cd4b28ed520472e8b43de00b2de56",
+          "83b36ded6b43b9bc81fbf617c40b83b5",
+          "0ebd57f93a114d146a954da4ecae1e67",
+          "6c99c7793f41fccc4bd595b03711913e",
+          "56b81006f361f6406d0e940d2f89a39c"
+        ],
+        "visible": true
+      },
+      {
+        "pid": 10,
+        "name": "天地图电子",
+        "icon": "img/basemaps/tdt_vec.png",
+        "type": "group",
+        "layers": [
+          {
+            "name": "底图",
+            "type": "www_tdt",
+            "layer": "vec_d",
+            "key": ["313cd4b28ed520472e8b43de00b2de56"]
+          },
+          {
+            "name": "注记",
+            "type": "www_tdt",
+            "layer": "vec_z",
+            "key": ["83b36ded6b43b9bc81fbf617c40b83b5"]
+          }
+        ]
+      },
+      {
+        "pid": 10,
+        "name": "天地图地形",
+        "icon": "img/basemaps/tdt_ter.png",
+        "type": "group",
+        "layers": [
+          {
+            "name": "底图",
+            "type": "www_tdt",
+            "layer": "ter_d",
+            "key": ["313cd4b28ed520472e8b43de00b2de56"]
+          },
+          {
+            "name": "注记",
+            "type": "www_tdt",
+            "layer": "ter_z",
+            "key": ["83b36ded6b43b9bc81fbf617c40b83b5"]
+          }
+        ]
+      },
+      {
+        "pid": 10,
+        "name": "OSM地图",
+        "type": "xyz",
+        "icon": "img/basemaps/osm.png",
+        "url": "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        "subdomains": "abc"
+      },
+      {
+        "pid": 10,
+        "name": "街道图",
+        "icon": "img/basemaps/mapboxStreets.png",
+        "type": "mapbox",
+        "mapId": "mapbox.streets"
+      },
+      {
+        "pid": 10,
+        "name": "黑色底图",
+        "icon": "img/basemaps/bd-c-dark.png",
+        "type": "mapbox",
+        "mapId": "mapbox.dark"
+      },
+      {
+        "pid": 10,
+        "name": "灰色底图",
+        "icon": "img/basemaps/bd-c-grayscale.png",
+        "type": "mapbox",
+        "mapId": "mapbox.light"
+      },
+      {
+        "pid": 10,
+        "name": "离线地图",
+        "type": "xyz",
+        "icon": "img/basemaps/mapboxSatellite.png",
+        "url": "http://data.marsgis.cn/maptile/wgs3857img/{z}/{x}/{y}.jpg",
+        "rectangle": { "xmin": -180, "xmax": 180, "ymin": -85, "ymax": 85 }
+      },
+      {
+        "pid": 10,
+        "name": "单张图片",
+        "icon": "img/basemaps/offline.png",
+        "type": "image",
+        "url": "img/world/world.jpg"
+      }
+    ],
+    "operationallayers": [
+      {
+        "pid": 10,
+        "name": "天地图注记",
+        "type": "www_tdt",
+        "layer": "img_z",
+        "key": [
+          "313cd4b28ed520472e8b43de00b2de56",
+          "83b36ded6b43b9bc81fbf617c40b83b5",
+          "0ebd57f93a114d146a954da4ecae1e67",
+          "6c99c7793f41fccc4bd595b03711913e",
+          "56b81006f361f6406d0e940d2f89a39c"
+        ],
+        "proxy": "http://data.marsgis.cn/proxy/",
+        "visible": false
+      },
+      {
+        "id": 60,
+        "name": "地形",
+        "type": "group"
+      },
+      {
+        "pid": 60,
+        "type": "terrain",
+        "name": "官方全球地形",
+        "terrain": {
+          "type": "ion"
+        },
+        "radio": true
+      },
+      {
+        "pid": 60,
+        "type": "terrain",
+        "name": "MarsGIS地形",
+        "terrain": {
+          "type": "default",
+          "url": "http://data.marsgis.cn/terrain"
+        },
+        "radio": true
+      },
+      {
+        "pid": 60,
+        "type": "terrain",
+        "name": "ArcGIS地形",
+        "terrain": {
+          "type": "arcgis",
+          "url": "https://elevation3d.arcgis.com/arcgis/rest/services/WorldElevation3D/Terrain3D/ImageServer"
+        },
+        "radio": true
+      },
+      {
+        "pid": 60,
+        "type": "terrain",
+        "name": "无地形",
+        "terrain": {
+          "type": "ellipsoid"
+        },
+        "radio": true
+      },
+      {
+        "id": 50,
+        "name": "辅助图层",
+        "type": "group"
+      },
+
+      {
+        "pid": 50,
+        "type": "custom_graticule",
+        "name": "经纬网",
+        "visible": false
+      },
+
+      {
+        "id": 20,
+        "name": "三维模型",
+        "type": "group"
+      },
+
+      {
+        "id": 2030,
+        "pid": 20,
+        "name": "倾斜摄影",
+        "type": "group"
+      },
+
+      {
+        "pid": 2030,
+        "type": "3dtiles",
+        "name": "几栋楼",
+        "url": "http://reparo.okaygis.com:10092/result/9b9a3b7c-a0e7-44a0-88ca-856ca656d26b/Scene/Production_1.json",
+        "maximumScreenSpaceError": 2
+      }
+    ]
+  }
+}

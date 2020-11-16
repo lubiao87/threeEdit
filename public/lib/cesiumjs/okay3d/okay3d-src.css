@@ -1,0 +1,640 @@
+/*!
+ * okay3d (MarsGIS for Cesium)三维地球平台  
+ * 版本信息：v2.2.0, hash值: 92f1bc6a52dd56e63ace
+ * 编译日期：2020-11-7 17:35:55     
+ * 版权所有：Copyright by 欧科科技 http://cesium.marsgis.cn
+ * 
+ */
+/**地球容器div*/
+
+.okay3d-container, .cesium-container {
+    /* .cesium-container为兼容v1旧版本的*/
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+/**左下角，鼠标经纬度提示*/
+
+.okay3d-locationbar {
+    position: absolute;
+    z-index: 991;
+    /*left: 110px;
+    bottom: 1px;*/
+    padding: 3px 10px;
+    font-size: 13px;
+    color: rgb(233, 233, 233);
+    text-shadow: 2px 2px 2px #000;
+    background-color: rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+}
+
+.okay3d-locationbar-content {
+    float: right;
+}
+
+.okay3d-locationbar-content div {
+    float: left;
+    /* min-width: 80px; */
+    margin-right: 30px;
+}
+
+@media screen and (max-width:600px) {
+    .okay3d-locationbar {
+        display: none;
+    }
+}
+
+/**滚轮样式*/
+
+.okay3d-mousezoom {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 40px;
+    height: 40px;
+    margin-top: -23px;
+    /*图片高度的一半*/
+    margin-left: -23px;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    -webkit-transition: visibility 0s 0.2s, opacity 0.2s ease-in;
+    -moz-transition: visibility 0s 0.2s, opacity 0.2s ease-in;
+    transition: visibility 0s 0.2s, opacity 0.2s ease-in;
+}
+
+.okay3d-mousezoom .zoomimg {
+    width: 36px;
+    height: 36px;
+    background-image: url(img/cursor.png);
+    background-size: 100% 100%;
+}
+
+.okay3d-mousezoom-visible {
+    visibility: visible;
+    opacity: 1;
+    -webkit-transition: opacity 0.2s ease-out;
+    -moz-transition: opacity 0.2s ease-out;
+    transition: opacity 0.2s ease-out;
+}
+
+/*****popup弹出框样式******/
+
+.okay3d-popup {
+    position: absolute;
+    left: 0;
+    top: 5px;
+    text-align: center;
+    z-index: 999;
+}
+
+.okay3d-popup-close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 4px 4px 0 0;
+    text-align: center;
+    width: 18px;
+    height: 14px;
+    font: 16px/14px Tahoma, Verdana, sans-serif;
+    text-decoration: none;
+    font-weight: bold;
+    background: transparent;
+    z-index: 999;
+}
+
+.okay3d-popup-content-wrapper {
+    text-align: center;
+    max-height: 500px;
+    overflow-y: auto;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+    padding: 1px;
+    text-align: left;
+    border-radius: 3px;
+}
+
+.okay3d-popup-content {
+    margin: 10px;
+    line-height: 1.4;
+    font-size: 13px;
+    max-width: 800px;
+    min-width: 50px;
+}
+.okay3d-popup-tip-container {
+    margin: 0 auto;
+    width: 40px;
+    height: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.okay3d-popup-tip {
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.4);
+    width: 17px;
+    height: 17px;
+    padding: 1px;
+    margin: -10px auto 0;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.okay3d-popup-color {
+    /* color: #2b2929;*/ /*黑色字体*/
+    color: #ffffff;   /*白色字体*/
+}
+
+.okay3d-popup-background {
+    background: rgba(63, 72, 84, 0.9);  /*黑色背景*/
+    /*background: rgba(255,255,255,0.85);*/   /*白色背景*/
+}
+
+/**内部配置*/
+
+.mars-popup-titile {
+    /* position: absolute;
+    top: 0;
+    left: 0;
+    right: 0; */
+    border-radius: 3px 0 0 3px;
+    padding: 0 80px 0 10px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    color: white;
+    /* background-color: rgba(63, 72, 84, 0.8); */
+    border-bottom: 1px solid #616161;
+    overflow: hidden;
+}
+
+.mars-popup-content {
+    min-width: 150px;
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.mars-popup-content>div {
+    margin-top: 5px;
+}
+.mars-popup-content label {
+    margin: 0 10px;
+    min-width: 55px;
+    float: left;
+}
+.mars-popup-content input,textarea {
+    color: #ffffff;
+    background-color: rgba(63, 72, 84, 0.7);
+    border-width: 1px;
+    border-style: solid; 
+}
+.mars-popup-content textarea { 
+    height: 60px;
+    resize: none;
+}
+
+/**标绘Draw提示信息*/
+
+.okay3d-draw-tooltip {
+    display: block;
+    position: absolute;
+    visibility: visible;
+    max-width: 200px;
+    min-width: 100px;
+    padding: 2px 5px;
+    font-size: 11px;
+    z-index: 1000;
+    opacity: 0.8;
+    -khtml-opacity: 0.8;
+    -moz-opacity: 0.8;
+    filter: alpha(opacity=80);
+    pointer-events: none;
+}
+
+.okay3d-draw-tooltip.left .okay3d-draw-tooltip-arrow {
+    top: 50%;
+    right: 0;
+    margin-top: -5px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 5px solid #000000;
+}
+
+.okay3d-draw-tooltip.right .okay3d-draw-tooltip-arrow {
+    top: 50%;
+    left: 0;
+    margin-top: -5px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-right: 5px solid #000000;
+}
+
+.okay3d-draw-tooltip-inner {
+    padding: 3px 5px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: left;
+    max-width: 200px;
+    text-decoration: none;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.okay3d-draw-tooltip-inner p {
+    margin: 0;
+}
+
+.okay3d-draw-tooltip-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+}
+
+/**右键菜单*/
+
+.okay3d-contextmenu {
+    position: absolute;
+    padding: 0;
+    z-index: 999;
+    display: none;
+    /* top: 100px;
+    left: 100px; */
+}
+
+.okay3d-contextmenu-ul i {
+    padding-right: 10px;
+    min-width: 20px;
+    text-align: center;
+}
+
+.okay3d-contextmenu-ul {
+    background: rgba(43, 44, 47, 0.8);
+    border: 1px solid #2b2c2f;
+    min-width: 110px;
+    position: relative;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.okay3d-contextmenu-ul li+li {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.okay3d-contextmenu-ul li+li:before {
+    content: "";
+    display: block;
+    height: 1px;
+    width: 100%;
+    background: -webkit-linear-gradient(to left, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(to left, transparent, rgba(255, 255, 255, 0.2), transparent);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.okay3d-contextmenu-ul .line {
+    content: "";
+    display: block;
+    height: 1px;
+    width: 96%;
+    position: absolute;
+    left: 2%;
+    background: #dddddd
+}
+
+.okay3d-contextmenu-ul>li>a {
+    padding: 6px 10px;
+    -webkit-transition: background-color .25s;
+    -o-transition: background-color .25s;
+    transition: background-color .25s;
+    display: block;
+    clear: both;
+    font-weight: 400;
+    line-height: 1.6;
+    color: #76838f;
+    white-space: nowrap;
+    color: #edffff;
+    text-decoration: none;
+}
+
+.okay3d-contextmenu-ul>li>a:hover, .okay3d-contextmenu-ul>li>a:focus, .okay3d-contextmenu-ul>li>.active {
+    color: #fff;
+    background-color: #444d59;
+    text-decoration: none;
+}
+
+.okay3d-contextmenu-ul>.active>a, .okay3d-contextmenu-ul>.active>a:hover, .okay3d-contextmenu-ul>.active>a:focus {
+    color: #fff;
+    background-color: #444d59;
+    text-decoration: none;
+}
+
+.okay3d-contextmenu-ul line {
+    width: 100%;
+    height: 20px;
+    border: 1px
+}
+
+.okay3d-sub-menu {
+    min-width: 160px;
+    position: absolute;
+    top: 0;
+    left: 160px;
+    background: rgba(43, 44, 47, 0.8);
+    display: none;
+}
+
+.okay3d-sub-menu li {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 14px;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+}
+
+.okay3d-sub-menu li:hover {
+    background-color: #444d59;
+}
+
+/**动画点*/
+.okay3d-animation-point, .okay3d-animation-point:after, .okay3d-animation-point:before, .okay3d-animation-point p, .okay3d-animation-point p:after, .okay3d-animation-point p:before {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -o-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box
+}
+
+.okay3d-animation-point {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1px solid hsla(0, 0%, 100%, .5);
+    cursor: pointer;
+    color: #0ff;
+    background: currentColor;
+    z-index: 3;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 2em currentColor, 0 0 .5em currentColor;
+    position: absolute;
+}
+
+.okay3d-animation-point.mapError {
+    color: red
+}
+
+.okay3d-animation-point.mapWarn {
+    color: #b5a603
+}
+
+.okay3d-animation-point.mapSuccess {
+    color: #239233
+}
+
+.okay3d-animation-point.mapOrange {
+    color: #8c4d34
+}
+
+.okay3d-animation-point:after, .okay3d-animation-point:before, .okay3d-animation-point p:after, .okay3d-animation-point p:before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 50%;
+    top: 50%;
+    border-radius: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.okay3d-animation-point:after, .okay3d-animation-point:before {
+    border: 1px solid;
+    -webkit-animation: okay3d-mapAni 1s ease infinite;
+    -moz-animation: okay3d-mapAni 1s ease infinite;
+    -o-animation: okay3d-mapAni 1s ease infinite;
+    -ms-animation: okay3d-mapAni 1s ease infinite;
+    animation: okay3d-mapAni 1s ease infinite
+}
+
+.okay3d-animation-point p:before {
+    border: 1px solid
+}
+
+.okay3d-animation-point p {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    -webkit-animation: okay3d-mapAni 2s ease infinite;
+    -moz-animation: okay3d-mapAni 2s ease infinite;
+    -o-animation: okay3d-mapAni 2s ease infinite;
+    -ms-animation: okay3d-mapAni 2s ease infinite;
+    animation: okay3d-mapAni 2s ease infinite
+}
+
+@-webkit-keyframes okay3d-mapAni {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+        filter: alpha(opacity=1)
+    }
+    25% {
+        width: 12px;
+        height: 12px;
+        opacity: .7;
+        filter: alpha(opacity=70)
+    }
+    50% {
+        width: 20px;
+        height: 20px;
+        opacity: .5;
+        filter: alpha(opacity=50)
+    }
+    75% {
+        width: 30px;
+        height: 30px;
+        opacity: .2;
+        filter: alpha(opacity=20)
+    }
+    to {
+        width: 40px;
+        height: 40px;
+        opacity: 0;
+        filter: alpha(opacity=0)
+    }
+}
+
+@-moz-keyframes okay3d-mapAni {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+        filter: alpha(opacity=1)
+    }
+    25% {
+        width: 12px;
+        height: 12px;
+        opacity: .7;
+        filter: alpha(opacity=70)
+    }
+    50% {
+        width: 20px;
+        height: 20px;
+        opacity: .5;
+        filter: alpha(opacity=50)
+    }
+    75% {
+        width: 30px;
+        height: 30px;
+        opacity: .2;
+        filter: alpha(opacity=20)
+    }
+    to {
+        width: 40px;
+        height: 40px;
+        opacity: 0;
+        filter: alpha(opacity=0)
+    }
+}
+
+@-o-keyframes okay3d-mapAni {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+        filter: alpha(opacity=1)
+    }
+    25% {
+        width: 12px;
+        height: 12px;
+        opacity: .7;
+        filter: alpha(opacity=70)
+    }
+    50% {
+        width: 20px;
+        height: 20px;
+        opacity: .5;
+        filter: alpha(opacity=50)
+    }
+    75% {
+        width: 30px;
+        height: 30px;
+        opacity: .2;
+        filter: alpha(opacity=20)
+    }
+    to {
+        width: 40px;
+        height: 40px;
+        opacity: 0;
+        filter: alpha(opacity=0)
+    }
+}
+
+@-ms-keyframes okay3d-mapAni {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+        filter: alpha(opacity=1)
+    }
+    25% {
+        width: 12px;
+        height: 12px;
+        opacity: .7;
+        filter: alpha(opacity=70)
+    }
+    50% {
+        width: 20px;
+        height: 20px;
+        opacity: .5;
+        filter: alpha(opacity=50)
+    }
+    75% {
+        width: 30px;
+        height: 30px;
+        opacity: .2;
+        filter: alpha(opacity=20)
+    }
+    to {
+        width: 40px;
+        height: 40px;
+        opacity: 0;
+        filter: alpha(opacity=0)
+    }
+}
+
+@keyframes okay3d-mapAni {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+        filter: alpha(opacity=1)
+    }
+    25% {
+        width: 12px;
+        height: 12px;
+        opacity: .7;
+        filter: alpha(opacity=70)
+    }
+    50% {
+        width: 20px;
+        height: 20px;
+        opacity: .5;
+        filter: alpha(opacity=50)
+    }
+    75% {
+        width: 30px;
+        height: 30px;
+        opacity: .2;
+        filter: alpha(opacity=20)
+    }
+    to {
+        width: 40px;
+        height: 40px;
+        opacity: 0;
+        filter: alpha(opacity=0)
+    }
+}
+/* widget测试工具栏 */
+.okay3d-widgetbar {
+    margin: 0 auto;
+    position: absolute;
+    bottom: 30px;
+    left: 20%;
+    width: 60%;
+    height: auto;
+    z-index: 1987;
+}
+.okay3d-widgetbar .fa {
+    margin-right: 5px;
+} 

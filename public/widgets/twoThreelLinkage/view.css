@@ -1,0 +1,57 @@
+#centerDivEx2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#centerDiv {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/**cesium工具栏位置*/
+.cesium-viewer-toolbar {
+  top: auto;
+  left: auto;
+  right: 5px;
+  bottom: 5px;
+}
+
+.cesium-viewer-toolbar>.cesium-toolbar-button,
+.cesium-navigationHelpButton-wrapper,
+.cesium-viewer-geocoderContainer {
+  margin-bottom: 5px;
+  float: right;
+  clear: both;
+}
+
+.cesium-baseLayerPicker-dropDown {
+  bottom: 0;
+  right: 40px;
+  max-height: 700px;
+  margin-bottom: 5px;
+}
+
+.cesium-navigation-help {
+  top: auto;
+  bottom: 0;
+  right: 40px;
+  transform-origin: right bottom;
+}
+.infoview {
+  width: 236px;
+}
+.infoview .layui-layer-setwin .layui-layer-close1 {
+      /* background-image: url("../../lib/layer/theme/retina/svg/close-1.svg"); */
+      -webkit-background-size: 18px 18px;
+      background-size: 20px;
+}

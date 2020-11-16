@@ -1,0 +1,12 @@
+    <!-- demo面板 -->
+    <div class="infoview infoview-buffer">
+      缓冲半径：
+      <input id="txtRadius" type="number" value="1" min="1" step="1" max="999" class="form-control" style="width: 100px;" />（公里）
+
+      <input type="button" class="btn btn-primary" value="点" onclick="drawPoint()" />
+      <input type="button" class="btn btn-primary" value="线" onclick="drawPolyline()" />
+      <input type="button" class="btn btn-primary" value="面" onclick="drawPolygon()" />
+      <span class="layui-layer-setwin" onclick="okay3d.widget.disable('widgets/bufferAnalysis/widget.js')"  >
+        <a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;">X</a>
+      </span>
+  </div>

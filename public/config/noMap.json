@@ -1,0 +1,40 @@
+{
+  "homeButton": false,
+  "sceneModePicker": false,
+  "navigationHelpButton": false,
+  "infoBox": false,
+  "vrButton": false,
+  "fullscreenButton": false,
+  "geocoder": false,
+  "showRenderLoopErrors": true,
+  "sceneMode": "3",
+  "minzoom": 0.1,
+  "maxzoom": 200000,
+  "style": {
+    "atmosphere": false,
+    "lighting": false,
+    "fog": false,
+    "testTerrain": false,
+    "skyBox": false,
+    "sun": false,
+    "moon": false,
+    "globe": true
+  },
+  "baseColor": "#363635",
+  "backgroundColor": "#363635",
+  "mouseZoom": false,
+  "terrain": {
+    "visible": false
+  },
+  "basemaps": [],
+  "operationallayers": [
+    {
+      "name": "网格线",
+      "type": "custom_grid",
+      "color": "#ffffff",
+      "alpha": 0.03,
+      "cells": 2,
+      "visible": true
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+/* 2017-9-28 13:40:41 | 修改 管理者（QQ：179727719） */
+
+.mapCompareBar {
+    position: absolute;
+    right: 230px;
+    top: 65px;
+    z-index: 19910601;
+    /*height: 50px;*/
+    /*padding: 5px 10px 5px 10px;*/
+    font-size: 14px;
+    /*background-color: #ffffff;*/
+    border-radius: 5px; 
+}
+
+.mapCompareBar div {
+    float: left;
+    /*margin-right: 5px;*/
+}
+
+.dark .mapCompareBar {
+    color: #ffffff;
+    background-color: rgba(23, 23, 23, 0.6);
+}
+.mapCompareBar .btn-default{
+    color: #fff;
+    /* background-color: #5593e6; */
+    background-color: rgba(23, 23, 23, 0.6);
+    border:none;
+}
+#view_left{
+    overflow-x: hidden!important;
+}

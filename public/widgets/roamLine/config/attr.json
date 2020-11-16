@@ -1,0 +1,80 @@
+{
+    "polyline": {
+        "name": "线",
+        "position": {
+            "height": true,
+            "minCount": 2
+        },
+        "style": [
+            { "name": "color", "label": "颜色", "type": "color", "defval": "#ffff00" },
+            { "name": "width", "label": "线宽", "type": "number", "defval": 3 },
+            {
+                "name": "lineType",
+                "label": "线型",
+                "type": "combobox",
+                "defval": "solid",
+                "data": [
+                    { "text": "实线", "value": "solid" },
+                    { "text": "虚线", "value": "dash" }
+                ]
+            },
+            { "name": "outline", "label": "是否衬色", "type": "radio", "defval": false, "impact": [ "outlineColor", "outlineWidth" ] },
+            { "name": "outlineColor", "label": "衬色颜色", "type": "color", "defval": "#ffffff" },
+            { "name": "outlineWidth", "label": "衬色宽度", "type": "number", "defval": 2 },
+            { "name": "opacity", "label": "透明度", "type": "slider", "defval": 1 }
+        ],
+        "attr": [
+            { "name": "id", "label": "主键", "type": "hidden", "defval": "" },
+            { "name": "name", "label": "名称", "type": "text", "defval": "" },
+
+            {
+                "name": "model",
+                "label": "漫游模型",
+                "type": "combobox",
+                "defval": "",
+                "data": [
+                    { "text": "无", "value": "" }, 
+                    { "text": "小汽车", "value": "model_car" },
+                    { "text": "民航飞机", "value": "model_air" },
+                    { "text": "军用飞机", "value": "model_zhanji" },
+                    { "text": "航天卫星", "value": "model_weixin" }
+                ]
+            },
+            { "name": "clampToGround", "label": "是否贴地漫游", "type": "radio", "defval": false },
+            { "name": "interpolation", "label": "是否弧形插值", "type": "radio", "defval": false },
+            { "name": "showGroundHeight", "label": "计算离地高度", "type": "radio", "defval": false },
+
+            { "name": "showLabel", "label": "显示注记", "type": "radio", "defval": false },
+            { "name": "showLine", "label": "显示路线", "type": "radio", "defval": false },
+            { "name": "showShadow", "label": "显示投影", "type": "radio", "defval": false, "impact": [ "shadowType"]  },
+            {
+                "name": "shadowType",
+                "label": "投影方式",
+                "type": "combobox",
+                "defval": "wall",
+                "data": [
+                    { "text": "线下轨迹", "value": "wall" },
+                    { "text": "圆锥", "value": "cylinder" }
+                ]
+            },
+            {
+                "name": "cameraType",
+                "label": "视角",
+                "type": "combobox",
+                "defval": "gs",
+                "data": [
+                    { "text": "无", "value": "" },
+                    { "text": "跟随视角", "value": "gs" },
+                    { "text": "锁定第一视角", "value": "dy" },
+                    { "text": "锁定上帝视角", "value": "sd" }
+                ]
+            },
+            { "name": "followedX", "label": "锁定视角距离", "type": "number", "defval": 50 },
+            { "name": "followedZ", "label": "锁定视角高度", "type": "number", "defval": 10 },
+            
+            { "name": "clockLoop", "label": "是否循环漫游", "type": "radio", "defval": false  },
+
+            { "name": "remark", "label": "备注", "type": "textarea", "defval": "" }
+        ]
+    }
+}

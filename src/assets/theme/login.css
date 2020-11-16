@@ -1,0 +1,318 @@
+/* 登录页面开始 */
+html{
+    background:#181c25;
+    height:100%;
+    width:100%;
+
+}
+body{
+    width:100%;
+    height:100%;
+    margin:0px;
+    background-color:#1c1f24;
+    background:url(../../assets/common/image/common/loginPage_bg.jpg) no-repeat fixed;
+    background-size:cover;
+}
+#app{
+  height:100%;
+  width:100%;
+}
+.page-login{
+  height:100%;
+  width:100%;
+  background-color:#1c1f24;
+  background:url(../../assets/common/image/common/loginPage_bg.jpg) no-repeat fixed;
+  background-size:cover;
+}
+.yhui-imglogo{
+  position: fixed;
+  top:50px;
+  right:50px;
+}
+#particles-js canvas{
+opacity: 0.2;
+}
+.login_header{
+   text-align: center;
+}
+.login_box {
+ 	width: 382px;
+ 	height: 448px;
+ 	background-color: rgba(17,44,76,0.5);
+ 	vertical-align: middle;
+ 	margin: auto;
+ 	position: absolute;
+ 	top: 50%;
+ 	left: 50%;
+ 	margin-left: -192px;
+ 	margin-top: -224px;
+ 	padding: 32px;
+ 	box-sizing: border-box;
+ 	box-shadow: 0px 0px 16px rgba(0, 0, 0, 0.15);
+ 	border-radius: 4px;
+ 	z-index: 8;
+ }
+
+ .user_name {
+ 	width: 100%;
+ 	height: 42px;
+ 	margin-bottom: 20px;
+ 	margin-top: 32px;
+ 	position: relative;
+   -webkit-transition: 0.5s;
+   -ms-transition: 0.5s;
+   transition: 0.5s;
+ }
+
+ .user_name i {
+ 	position: absolute;
+ 	top: 8px;
+ 	left: 14px;
+ 	color: #fff;
+ 	font-size: 20px;
+ }
+ .user_name input,
+ .pass_word input {
+   box-sizing: border-box;
+ 	width: 100%;
+ 	height: 42px;
+ 	text-indent: 10px;
+     cursor: pointer;
+ 	border-radius: 4px;
+ 	border: 1px solid transparent;
+ background-color: rgba(186,205,229,0.1) !important;
+ 	/*color:#8694a6;*/
+    color:#fff;
+ 	font-size: 14px;
+ 	text-indent: 45px;
+ 	padding-top: 5px \9;
+   outline:none ;
+   -webkit-transition: 0.5s;
+   -ms-transition: 0.5s;
+   transition: 0.5s
+ }
+ .pass_word input[name=password]:-webkit-autofill{
+   background-color: red !important;
+ }
+
+ .user_name input:focus,
+  .pass_word input:focus,
+   .yanzm input:focus {
+ 	border:1px solid #49c1ff;
+ 	background:rgba(186,205,229,0.1) ;
+    color:#fff;
+   -webkit-transition: 0.5s;
+   -ms-transition: 0.5s;
+   transition: 0.5s
+ }
+
+
+ .pass_word {
+ 	width: 100%;
+ 	height: 42px;
+ 	margin-bottom: 20px;
+ 	position: relative;
+   -webkit-transition: 0.5s;
+   -ms-transition: 0.5s;
+   transition: 0.5s
+ }
+
+ .pass_word i {
+ 	position: absolute;
+ 	top: 8px;
+ 	left: 14px;
+ 	color: #fff;
+ 	font-size: 20px;
+ }
+
+
+ .yanzm {
+ 	width: 100%;
+ 	height: 42px;
+ 	margin-bottom: 30px;
+ 	position: relative;
+ }
+
+ .yanzm i {
+ 	position: absolute;
+ 	top: 8px;
+ 	left: 14px;
+ 	color: #fff;
+ 	font-size: 20px;
+ }
+
+ .yanzm .v_code {
+   box-sizing: border-box;
+ 	width: 65%;
+ 	height: 42px;
+     cursor: pointer;
+ 	text-indent: 10px;
+ 	border-radius: 4px;
+   border: 1px solid transparent;
+ 	background-color: rgba(69,141,229,0.1);
+ 	 color:#fff;
+ 	font-size: 14px;
+ 	float: left;
+ 	text-indent: 45px;
+  outline: none;
+ 	padding-top: 5px \9;
+   -webkit-transition: 0.5s;
+   -ms-transition: 0.5s;
+   transition: 0.5s
+ }
+
+ .yanzm .unchanged {
+   background-color: rgba(69,141,229,0.1);
+ 	width: 30%;
+ 	height: 42px;
+ 	border: none;
+ 	/*color: #999;*/
+ 	font-size: 20px;
+ 	float: right;
+ 	color: #fff;
+   text-align: center;
+ 	font-family: constantia;
+   cursor: pointer;
+   outline: none;
+ 	border-radius: 0px !important;
+
+ }
+
+
+
+ .code {
+ 	/* background: url(../img/login_img/bg_checkword.png) no-repeat; */
+ 	font-family: Arial;
+ 	/* font-style: 14px; */
+ 	color: #000;
+ 	border: 0;
+ 	/*padding: 2px 5px;*/
+ 	letter-spacing: 3px;
+ 	font-weight: bolder;
+ 	text-align: center;
+ 	float: left;
+ }
+
+ .unchanged {
+ 	border: 0;
+ }
+
+ .confirm_button {
+ 	width: 100% !important;
+ 	height: 50px;
+ 	margin-bottom: 20px;
+ }
+
+ .confirm_button button {
+ 	width: 100% !important;
+ 	height: 50px;
+ 	font-size: 20px;
+    background-color: rgba(69,141,229,0.1);
+    border:1px solid rgba(69,141,229,0.1);
+    color:#fff;
+ }
+ .confirm_button button:hover {
+    width: 100% !important;
+    height: 50px;
+     cursor: pointer;
+    font-size: 20px;
+    background-color: rgba(69,141,229,0.1);
+    border:1px solid #8a9eff;
+    color:#8a9eff;
+   -webkit-transition: 0.5s;
+   -ms-transition: 0.5s;
+   transition: 0.5s
+ }
+.confirm_button button:disabled {
+  background-color: rgba(69,141,229,0.1);
+  border:1px solid rgba(186,205,229,0.2);
+  color:rgba(186,205,229,0.3);
+
+}
+ .forget_password a {
+ 	float: right;
+ 	font-size: 16px;
+ 	color: #bacde5;
+ 	text-decoration: none;
+ 	display:block ;
+
+ }
+ .forget_password a:hover{
+ 	color: #8a9eff;
+ 	text-decoration: none;
+
+ }
+ writeColor2{
+   color: #fff !important;
+ }
+ .activeColorb{
+color: #8a9eff !important;
+}
+
+ /*兼容ie8的样式*/
+
+/*3D动画开始*/
+#canvas{
+    width:100%;
+    height:100 vh;
+    overflow: hidden;
+    position:absolute;
+    top:0;
+    left:0;
+    background-color: #1a1724;
+}
+.canvas-wrap{
+    position:relative;
+    height: 100%;
+    overflow: hidden;
+    opacity: 0.4;
+    z-index: 4;
+    display: none \9;
+
+}
+div.canvas-content{
+    position:relative;
+    z-index:2000;
+    color:#fff;
+    text-align:center;
+    padding-top:30px;
+}
+/* 登录页面结束 */
+
+
+.yanzm .unchanged:focus {
+  border:none
+}
+/* remove canvas default margin */
+canvas{
+    display:block;
+    vertical-align:bottom;
+}
+
+#particles-js{
+    width:100%;
+    height:100%;
+}
+
+
+.login_box input[type=text]:focus, .login_box input[type=password]:focus, .login_box textarea:focus {
+  -webkit-box-shadow: 0 0 0 1000px #1b3a66 inset;/*获取焦点时去除黄色背景*/
+  border: 1px solid #8a9eff;
+  border-radius: 4px;
+}
+.login_box input:-webkit-autofill,
+.login_box textarea:-webkit-autofill,
+.login_box select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #1b3a66 inset !important;  /*去除黄色背景*/
+  border: 1px solid #1b3a66;
+  -webkit-text-fill-color:#fff; /*字体颜色*/
+  border-radius: 0px;
+}
+
+.logo_img{
+    width:260px;
+}
+
+
+
+

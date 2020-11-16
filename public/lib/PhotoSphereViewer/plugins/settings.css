@@ -1,0 +1,91 @@
+/*!
+ * Photo Sphere Viewer 4.0.0-SNAPSHOT
+ * @copyright 2014-2015 Jérémy Heleine
+ * @copyright 2015-2020 Damien "Mistic" Sorel
+ * @licence MIT (https://opensource.org/licenses/MIT)
+ */
+.psv-settings-title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font: 24px sans-serif;
+  margin: 24px 0;
+}
+
+.psv-settings-title svg {
+  width: 24px;
+  height: 24px;
+  margin: 0 12px;
+}
+
+.psv-settings-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.psv-settings-item {
+  clear: both;
+  min-height: 20px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.psv-settings-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.psv-settings-item-label {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  font-weight: bold;
+}
+
+.psv-settings-item-value {
+  -webkit-box-flex: 0;
+      -ms-flex: none;
+          flex: none;
+}
+
+.psv-settings-item-icon {
+  -webkit-box-flex: 0;
+      -ms-flex: none;
+          flex: none;
+  height: 1em;
+  width: 1em;
+}
+
+.psv-settings-item-icon svg {
+  width: 1em;
+  height: 1em;
+}
+
+.psv-settings-item-icon:first-child {
+  margin-right: 1em;
+}
+
+.psv-settings-item-icon:last-child {
+  margin-left: 1em;
+}
+
+.psv-settings-item--header {
+  border-bottom: 1px solid currentColor;
+  margin-bottom: 1em;
+}
+
+.psv-settings-item--header svg {
+  -webkit-transform: scaleX(-1);
+          transform: scaleX(-1);
+}
+/*# sourceMappingURL=settings.css.map */

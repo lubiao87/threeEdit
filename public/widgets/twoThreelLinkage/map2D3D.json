@@ -1,0 +1,29 @@
+{
+  "map": {
+    "zoom": 13,
+    "center": {
+      "x": 117.240601,
+      "y": 31.827107
+    },
+    "minZoom": 1,
+    "maxZoom": 18,
+    "centerAutoLevel": 15,
+    "controls": [
+
+    ],
+    "basemaps": [
+      {
+        "pid": 10,
+        "name": "天地图电子",
+        "icon": "img/basemaps/tdt_vec.png",
+        "type": "group",
+        "layers": [
+            { "name": "底图", "type": "www_tdt", "layer": "vec_d", "key": ["313cd4b28ed520472e8b43de00b2de56" ] },
+            { "name": "注记", "type": "www_tdt", "layer": "vec_z", "key": [  "83b36ded6b43b9bc81fbf617c40b83b5" ] }
+        ]
+      }
+    ],
+    "operationallayers": [
+    ]
+  }
+}

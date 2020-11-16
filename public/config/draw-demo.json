@@ -1,0 +1,110 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "index": 0,
+      "type": "Feature",
+      "properties": {
+        "name": "圆形图片1",
+        "type": "circle",
+        "edittype": "circle",
+        "style": {
+          "fillType": "image",
+          "image": "img/point/dian_point.png",
+          "outline": false,
+          "opacity": 0.8,
+          "height": 1,
+          "radius": 2
+        },
+        "attr": {
+          "id": "20201019122433",
+          "name": "333",
+          "remark": "4444"
+        },
+        "group": "平面"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.45529556460819,
+          40.41059167602646,
+          500.23
+        ]
+      },
+      "vrurl" : "sphere-photo/1.jpg",
+      "desc": "Parc national du Mercantour <b>&copy; Damien Sorel</b>",
+      "position": [2, 0.02, 7.6],
+      "rotate": 0
+    },
+    {
+      "index": 1,
+      "type": "Feature",
+      "properties": {
+        "name": "圆形图片2",
+        "type": "circle",
+        "edittype": "circle",
+        "style": {
+          "fillType": "image",
+          "image": "img/point/dian_point.png",
+          "outline": false,
+          "opacity": 0.8,
+          "height": 1,
+          "radius": 2
+        },
+        "attr": {
+          "id": "20201019122432",
+          "name": "sdf",
+          "remark": "hsed"
+        },
+        "group": "平面"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.45558624854101,
+          40.41052694937175,
+          500.23
+        ]
+      },
+      "vrurl" : "sphere-photo/2.jpg",
+      "desc": "Test sphere",
+      "position": [2, 0.02, 11],
+      "rotate": -2.5
+    },
+    {
+      "index": 2,
+      "type": "Feature",
+      "properties": {
+        "name": "圆形图片3",
+        "type": "circle",
+        "edittype": "circle",
+        "style": {
+          "fillType": "image",
+          "image": "img/point/dian_point.png",
+          "outline": false,
+          "opacity": 0.8,
+          "height": 5,
+          "radius": 2
+        },
+        "attr": {
+          "id": "20201019122431",
+          "name": "sdf",
+          "remark": "hsed"
+        },
+        "group": "平面"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          115.45588296720703,
+          40.410133790059845,
+          6
+        ]
+      },
+      "vrurl" : "sphere-photo/3.jpg",
+      "desc": "Test sphere",
+      "position": [2, 0.02, 14],
+      "rotate": -2.5
+    }
+  ]
+}

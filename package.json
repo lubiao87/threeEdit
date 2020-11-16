@@ -1,0 +1,59 @@
+{
+  "name": "mars3d-simple-vue-widget",
+  "version": "2.0.0",
+  "description": " Mars3D基础项目模版（含widget模块）-Vue版",
+  "main": "index.js",
+  "keywords": [
+    "marsgis",
+    "okay3d",
+    "cesium",
+    "vue",
+    "widget"
+  ],
+  "scripts": {
+    "dev": "vue-cli-service serve",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@smallwei/avue": "^2.5.3",
+    "@turf/turf": "^5.1.6",
+    "axios": "^0.18.0",
+    "cesium": "^1.67",
+    "core-js": "^2.6.5",
+    "element-ui": "^2.4.7",
+    "font-awesome": "^4.7.0",
+    "mobile-detect": "^1.4.4",
+    "vue": "^2.6.6",
+    "vue-router": "^3.0.1",
+    "vuetify": "^1.2.5",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.5.0",
+    "@vue/cli-service": "^3.5.0",
+    "babel-plugin-jsx-v-model": "^2.0.3",
+    "babel-plugin-transform-vue-jsx": "^3.7.0",
+    "node-sass": "^4.14.0",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "vue-template-compiler": "^2.5.21",
+    "es6-promise": "^4.2.6",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marsgis/mars3d-simple-vue-widget.git"
+  },
+  "bugs": {
+    "url": "https://github.com/marsgis/mars3d-simple-vue-widget/issues",
+    "email": "wh@marsgis.cn"
+  },
+  "author": {
+    "name": "火星科技",
+    "url": "http://www.marsgis.cn"
+  },
+  "license": "ISC",
+  "homepage": "https://github.com/marsgis/mars3d-simple-vue-widget"
+}

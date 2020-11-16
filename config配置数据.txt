@@ -1,0 +1,37 @@
+{
+ "dotList": [],  // 标签数据
+ "map3d": {  // 三维配置
+    "fullscreenButton": false,
+    "style": {
+    "fog": false,
+    "skyBox": false,
+    "testTerrain": false,
+    "globe": true,
+    "atmosphere": false,
+    "moon": false,
+    "sun": false,
+    "lighting": false
+    },
+    "operationallayers": [],
+    "showRenderLoopErrors": true,
+    "mouseZoom": false,
+    "geocoder": false,
+    "infoBox": false,
+    "center": {
+    },
+    "sceneModePicker": false,
+    "baseColor": "#363635",
+    "minzoom": 0.1,
+    "backgroundColor": "#363635",
+    "vrButton": false,
+    "homeButton": false,
+    "maxzoom": 200000,
+    "terrain": {
+    "visible": false
+    },
+    "basemaps": [],
+    "sceneMode": "3",
+    "navigationHelpButton": false
+ },
+ "clip_points": [] // 裁剪坐标点
+}

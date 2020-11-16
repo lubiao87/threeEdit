@@ -1,0 +1,35 @@
+    <!-- demo面板 -->
+    <div class="infoview infoview-video">
+      <input type="button" class="btn btn-primary" value="贴地矩形" onclick="drawRectangle()" />
+      <input type="button" class="btn btn-primary" value="贴地面" onclick="drawPolygon(true)" />
+      <input type="button" class="btn btn-primary" value="立体面" onclick="drawPolygon(false)" />
+      <input type="button" class="btn btn-primary" value="清除" onclick="clearDraw()" />
+      <span class="layui-layer-setwin" onclick="okay3d.widget.disable('widgets/videoFusion/widget.js')"  >
+        <a class="layui-layer-ico layui-layer-close layui-layer-close1" href="javascript:;">X</a>
+      </span>
+      <table class="mars-table">
+          <tbody>
+              <tr>
+                  <td>方向:</td>
+                  <td>
+                      <input id="txtAngle" type="range" min="0" max="360" step="1" value="0">
+                  </td>
+              </tr>
+              <tr>
+                  <td>状态:</td>
+                  <td>
+
+                      <button id="video-play" type="button" class="btn btn-primary">
+                          <!-- <span class="fa fa-pause" aria-hidden="true"></span> 暂停 -->
+                          <span class="fa fa-play" aria-hidden="true"></span> 播放
+                      </button>
+
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
+
+  <video id="trailer" style="display: none;" muted="muted" autoplay="autoplay" loop="loop" crossorigin="" controls="">
+      <source src="http://data.marsgis.cn/video/lukou.mp4" type="video/mp4">
+  </video>

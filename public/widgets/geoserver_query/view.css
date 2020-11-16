@@ -1,0 +1,12 @@
+
+.geoserver {
+  width: initial;
+  top: 15px;
+  left: 350px;
+  padding-right: 26px;
+}
+.infoview .layui-layer-setwin .layui-layer-close1 {
+      /* background-image: url("lib/layer/theme/retina/svg/close-1.svg"); */
+      -webkit-background-size: 18px 18px;
+      background-size: 20px;
+}

@@ -1,0 +1,23 @@
+{
+  "id": "2200428",
+  "name": "三维可视化编辑",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "基于threejs开发的项目",
+  "glyphs": [
+    {
+      "icon_id": "287175",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
+      "icon_id": "14560746",
+      "name": "VIP",
+      "font_class": "VIP",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    }
+  ]
+}

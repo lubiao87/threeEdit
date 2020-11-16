@@ -1,0 +1,12 @@
+{
+    "key": [
+        "tG5XsHqezUvBgTMKFgCelEoedIDGOEkw",
+        "Yh5O37OS421hfSMDcQcOoEtwYor9yiut",
+        "SX2NvmraEst3hAk3lcZqWYk9j1SH9pEh", 
+        "ZPRwktAtbW7GmmCbSX5Eg7yRXjUzVxxj", 
+        "xTPOr5zen890vSPz6DEbwYkoM67Dmfjc"
+    ],
+    "url": "http://api.map.baidu.com/place/v2/search",
+    "region": "全国"
+
+}

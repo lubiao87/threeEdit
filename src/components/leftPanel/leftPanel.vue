@@ -3,7 +3,7 @@
     v-model="editableTabsValue"
     type="border-card"
     class="leftPanel"
-    :class="{ showbar: editableTabsValue != 0 }"
+    :class="{ showbar: showbar }"
     tab-position="left"
     @tab-click="tabClick"
   >
@@ -47,7 +47,8 @@ export default {
   },
   data() {
     return {
-      editableTabsValue: "",
+      editableTabsValue: "wall",
+      showbar: false,
       editableTabs: [
         {
           title: "墙体",
@@ -95,29 +96,17 @@ export default {
       ],
     };
   },
-  created() {
-    // console.log("editableTabsValue", this.editableTabsValue);
-  },
-  mounted() {
-    // console.log("editableTabsValue1", this.editableTabsValue);
-  },
   methods: {
     tabClick(e) {
       const that = this;
+      this.showbar = true;
       let data = this.editableTabs.filter((item) => {
         return item.name === that.editableTabsValue;
       })
       this.changeNavData(data[0])
     },
     setEditableTabsValue() {
-      
-      if (this.editableTabsValue == "" || this.editableTabsValue == 0) {
-        this.editableTabsValue = "floor";
-      } else {
-        this.editableTabsValue = "";
-      }
-      console.log(this.editableTabsValue);
-      // let data = {}
+      this.showbar = !this.showbar;
       // this.$emit("getChildData", data);
     },
     changeNavData(data) {
@@ -143,6 +132,7 @@ export default {
 }
 .tool-bar .el-tabs__content > div {
   height: 100%;
+  width: 100%;
 }
 .tool-bar .el-tabs--left.el-tabs--border-card .el-tabs__item.is-left {
   width: 80px;

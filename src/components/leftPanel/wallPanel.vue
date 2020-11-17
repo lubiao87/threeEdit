@@ -6,20 +6,20 @@
     </div> -->
     <div class="contentTabAreaNew">
       <div class="tabItemBig active float_L">地基尺寸</div>
-      <span class="edit float_R" @click="painting">绘画</span>
+      <span class="edit float_R" @click="changeWall">修改</span>
     </div>
-    <div class="item changeSizeArea" @click="painting">
+    <div class="item changeSizeArea">
       <div class="changeSizeBtn">
-        <span>{{ data.drawSize.h }} m</span><span class="desc">长</span>
+        <span>{{ drawSize.h }} m</span><span class="desc">长</span>
       </div>
       <i class="margin_i"></i>
       <div class="changeSizeBtn">
-        <span>{{ data.drawSize.w }} m</span><span class="desc">宽</span>
+        <span>{{ drawSize.w }} m</span><span class="desc">宽</span>
       </div>
     </div>
     <div class="contentTabAreaNew">
       <div class="tabItemBig active float_L">墙体属性</div>
-      <span class="edit float_R" @click="painting">修改</span>
+      <span class="edit float_R" @click="changeWall">修改</span>
       <!-- <span class="edit float_R">编辑</span> -->
     </div>
     <div class="item changeSizeArea">
@@ -31,23 +31,43 @@
         <span>0.20 m</span><span class="desc">厚度</span>
       </div>
     </div>
+    <dialogp :id="layerId" @queryDialog="queryDialog">
+      <div class="item changeSizeArea">
+        <div class="changeSizeBtn">
+          <span>{{ drawSize.h }} m</span><span class="desc">长</span>
+        </div>
+        <i class="margin_i"></i>
+        <div class="changeSizeBtn">
+          <span>{{ drawSize.w }} m</span><span class="desc">宽</span>
+        </div>
+      </div>
+      <el-button type="primary" @click="painting">绘画</el-button>
+      <el-button type="primary" @click="wallClose">闭合</el-button>
+    </dialogp>
   </div>
 </template>
 
 <script>
-import { layerOpen } from "@/map/layerOpen";
+// import { layerOpen } from "@/map/layerOpen";
+import dialogp from "@/components/dialog/dialog";
+import { listSearchMixin } from "../../mixin"; //混淆请求
 export default {
-  props: {
-    data: {
-      type: Object,
-      default: {
-        drawSize: {
-          h: 6,
-          w: 10,
-        },
-      }, //默认值
-    },
+  name: "wallPanel",
+  components: {
+    dialogp,
   },
+  mixins: [listSearchMixin],
+  // props: {
+  //   data: {
+  //     type: Object,
+  //     default: {
+  //       drawSize: {
+  //         h: 6,
+  //         w: 10,
+  //       },
+  //     }, //默认值
+  //   },
+  // },
   data: () => {
     return {
       content: "",
@@ -56,6 +76,10 @@ export default {
       drawIng: false,
       layerOpen: null,
       parendData: {},
+      drawSize: {
+        h: 6,
+        w: 10,
+      },
     };
   },
   created() {
@@ -67,16 +91,22 @@ export default {
         name: "绘画墙轮廓",
         parentName: "wall",
       };
-      this.content = "//player.youku.com/embed/XMjY3MzgzODg0";
-      this.drawIng = true;
-      this.layerId = Number(
-        Math.random()
-          .toString()
-          .substr(3, length) + Date.now()
-      ).toString(36);
-      layerOpen(this);
-      // console.log(this.layerOpen);
       this.$emit("getChildData", this.parendData);
+    },
+    wallClose(){
+      this.parendData = {
+        name: "闭合墙轮廓",
+        parentName: "wall",
+      };
+      this.$emit("getChildData", this.parendData);
+    },
+    changeWall() {
+      this.parendData = {
+        name: "修改墙轮廓",
+        parentName: "wall",
+      };
+      this.$emit("getChildData", this.parendData);
+      this.Set_DialogVisible(true);
     },
     btnCalback(index, layero) {
       console.log(index, layero);
@@ -90,14 +120,58 @@ export default {
       };
       this.$emit("getChildData", this.parendData);
     },
+    queryDialog() {
+      this.parendData = {
+        name: "确定墙轮廓",
+        parentName: "wall",
+      };
+      this.$emit("getChildData", this.parendData);
+    }
+  },
+  watch: {
+    threePoints(val) {
+      if (val.length > 0) {
+        // console.log(val)
+        let Xmax = val[0].x,
+          Xmin = val[0].x,
+          Hmax = val[0].z,
+          Hmin = val[0].z;
+        val.forEach((item) => {
+          if (item.x > Xmax) {
+            //求最大值的假设
+            Xmax = item.x;
+          }
+          if (item.x < Xmin) {
+            //求最大值的假设
+            Xmin = item.x;
+          }
+          if (item.z > Hmax) {
+            //求最大值的假设
+            Hmax = item.z;
+          }
+          if (item.z < Hmin) {
+            Hmin = item.z;
+          }
+        });
+        console.log(Xmax, Xmin, Hmax, Hmin);
+        this.drawSize = {
+          w: (Hmax - Hmin).toFixed(2),
+          h: (Xmax - Xmin).toFixed(2),
+        };
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss">
 .wallPanel {
-  width: 100%;
   height: 100%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 270px;
   .contentTabAreaNew {
     width: 100%;
     height: 50px;

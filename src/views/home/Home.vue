@@ -19,7 +19,10 @@ import progressPage from "@/components/progress/progressPage";
 import hearder from "@/components/hearder/hearder";
 import leftPanel from "@/components/leftPanel/leftPanel";
 
+import { listSearchMixin } from "../../mixin"; //混淆请求
+
 export default {
+  mixins: [listSearchMixin],
   name: "index",
   components: {
     progressPage,
@@ -37,8 +40,8 @@ export default {
       baifenbiShow: false,
       pointsIndex: 0, // 视角线进度点
       listGroup: null,
-      clearPosition: new THREE.Vector3(0, 30, -0.1),
-      childrenName: null
+      clearPosition: new THREE.Vector3(0, 20, 0.1),
+      pointList: [],
     };
   },
   mounted() {
@@ -81,22 +84,33 @@ export default {
 
       this.scene = new THREE.Scene();
       this.scene.background = envMap;
+      //环境光
+      var ambient = new THREE.AmbientLight(0x444444);
+      this.scene.add(ambient);
+      // let light = new THREE.HemisphereLight("#fff"); // 光照
+      // light.position.set(2, 10, 2);
+      // this.scene.add(light);
+      //点光源
+      var point = new THREE.PointLight("#fff");
+      point.position.set(2, 10, 2); //点光源位置
+      this.scene.add(point); //点光源添加到场景中
 
-      let light = new THREE.HemisphereLight("#fff"); // 光照
-      light.position.set(2, 10, 2);
-      this.scene.add(light);
       this.raycaster = new THREE.Raycaster();
       this.mouse = new THREE.Vector2();
       // 坐标系辅助显示
       let axesHelper = new THREE.AxesHelper(10);
       this.scene.add(axesHelper);
-
-      // model
-      // let loader = new THREE.GLTFLoader();
-
-      this.addTexture();
       this.listGroup = new THREE.Group();
       this.scene.add(this.listGroup);
+      this.points = new THREE.Group();
+      this.scene.add(this.points);
+      this.WallGroup = new THREE.Group();
+      this.scene.add(this.WallGroup);
+      // model
+      // let loader = new THREE.GLTFLoader();
+      var gridHelper = new THREE.GridHelper(30, 30);
+      this.scene.add( gridHelper );
+      this.addTexture();
 
       this.renderer = new THREE.WebGLRenderer({ antialias: true });
       this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -126,12 +140,12 @@ export default {
       );
     },
     animate() {
-      if (this.points) {
-        if (this.pointsIndex < this.points.length - 1) {
+      if (this.animatePoints) {
+        if (this.pointsIndex < this.animatePoints.length - 1) {
           this.pointsIndex++;
-          this.camera.position = this.points[this.pointsIndex];
+          this.camera.position = this.animatePoints[this.pointsIndex];
         } else {
-          this.points = null;
+          this.animatePoints = null;
         }
         this.camera.lookAt(new THREE.Vector3(0, 0, 0));
         this.camera.updateProjectionMatrix();
@@ -142,38 +156,20 @@ export default {
 
       this.renderer.render(this.scene, this.camera);
     },
-
-    addEventListenerFn() {
-      let threeDom = document.getElementById("cesiumContainer");
-      threeDom.addEventListener("mousemove", this.onMousemove, false);
-      threeDom.addEventListener("click", this.onDocumentClick, false);
-    },
-    onDocumentClick(event) {
+    addSpritePoint(event) {
+      // 增加点
       this.setIntersects(event, (intersects) => {
-        console.log(intersects);
         if (intersects.length > 0) {
-          intersects[0].object.material.color.set("#0ff");
-          this.intersects = intersects[0].object;
-          let curve = new THREE.CatmullRomCurve3([
-            this.camera.position,
-            new THREE.Vector3(
-              this.intersects.position.x,
-              1.5,
-              this.intersects.position.z
-            ),
-          ]);
-          this.points = curve.getPoints(100); //分段数100，返回101个顶点
-          // setTimeout(() => {
+          let point = intersects[0].point;
+          if (this.pointList.length > 0) {
+            console.log("增加点", point);
+            this.newWallMesh(point);
+          }
 
-          // }, 200);
-        } else {
-          // this.intersects = null;
-          this.listGroup.children.forEach((element) => {
-            element.material.color.set("#fff");
-          });
+          this.pointList.push(point);
         }
+        // console.log(layerOpen)
       });
-      // console.log(this.listGroup.children, intersects)
     },
     onMousemove(event) {
       this.setIntersects(event, (intersects) => {
@@ -208,14 +204,17 @@ export default {
       callback(intersects);
     },
     addTexture() {
-      let geometry = new THREE.PlaneGeometry(30, 20); //矩形平面
+      let geometry = new THREE.PlaneGeometry(30, 30); //矩形平面
       let material = new THREE.MeshLambertMaterial({
         color: "#ccc",
         side: THREE.DoubleSide, //两面可见
       }); //材质对象Material
       let mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+      mesh.position.set(0, -0.01, 0)
       mesh.rotateX(Math.PI / 2);
-      this.scene.add(mesh); //网格模型添加到场景中
+      
+      this.listGroup.add(mesh);
+      // this.scene.add(mesh); //网格模型添加到场景中
     },
     addFloorTexture() {
       let geometry = new THREE.PlaneGeometry(20, 10); //矩形平面
@@ -242,59 +241,82 @@ export default {
       mesh.rotateX(Math.PI / 2);
       this.scene.add(mesh); //网格模型添加到场景中
     },
-    addCircleGeometry() {
-      $.getJSON("./config/draw-demo.json", (result) => {
-        for (let index = 0; index < result.features.length; index++) {
-          this.dataList = result.features;
-          const element = this.dataList[index];
-          var geometry = new THREE.CylinderBufferGeometry(0.25, 0.3, 0.02, 32);
-          var material = new THREE.MeshBasicMaterial({
-            color: "#fff",
-            // side: THREE.DoubleSide, //两面可见
-          });
-          var circle = new THREE.Mesh(geometry, material);
-          circle.name = element.properties.name;
-          circle.indexN = element.index;
-          circle.position.set(
-            element.position[0],
-            element.position[1],
-            element.position[2]
-          ); //点光源位置
-          // circle.rotateX(Math.PI / 2);
-          this.listGroup.add(circle);
-        }
-      });
-
-      // this.scene.add( this.listGroup );
-    },
     getChildData(data) {
       console.log("获取chidren数据", data);
       if (data.parentName) {
-        
         switch (data.name) {
           case "绘画墙轮廓":
-            // if(this.childrenName !== data.name) {
-              if (this.controls) {
-                this.controls.dispose();
-                this.controls = null;
-              }
-              let curve = new THREE.CatmullRomCurve3([
-                this.camera.position,
-                this.clearPosition
-              ]);
-              this.points = curve.getPoints(100); //分段数100，返回101个顶点
-            // }
-            
+            this.WallGroup.children = [];
+            this.recoveryCameraPotion();
+            let threeDom = document.getElementById("cesiumContainer");
+            threeDom.addEventListener("click", this.addSpritePoint, false);
+            break;
+          case "闭合墙轮廓":
+            console.log("闭合");
+            this.newWallMesh(this.pointList[0]);
+            break;
+          case "确定墙轮廓":
+            console.log("确定墙轮廓");
+            if (!this.controls) {
+              this.controls = new THREE.OrbitControls(this.camera);
+            }
+            this.Three_Points(this.pointList);
+            this.pointList = [];
+            let threeDom2 = document.getElementById("cesiumContainer");
+            threeDom2.removeEventListener("click", this.addSpritePoint, false);
             break;
           default:
-            if (!this.controls) {
-                this.controls = new THREE.OrbitControls(this.camera);
-              }
-            
+            // if (!this.controls) {
+            //   this.controls = new THREE.OrbitControls(this.camera);
+            // }
+
             break;
         }
-        this.childrenName = data.name;
       }
+    },
+    newWallMesh(point) {
+      var shape = new THREE.Shape();
+      /**四条直线绘制一个矩形轮廓*/
+      shape.moveTo(0, 0.1); //起点
+      shape.lineTo(-3, 0.1); //第2点
+      shape.lineTo(-3, -0.1); //第3点
+      shape.lineTo(0, -0.1); //第4点
+      shape.lineTo(0, 0.1); //第5点
+      /**创建轮廓的扫描轨迹(3D样条曲线)*/
+      var curve = new THREE.SplineCurve3([
+        this.pointList[this.pointList.length - 1],
+        point,
+      ]);
+      var geometry = new THREE.ExtrudeGeometry( //拉伸造型
+        shape, //二维轮廓
+        //拉伸参数
+        {
+          bevelEnabled: false, //无倒角
+          extrudePath: curve, //选择扫描轨迹
+          // steps: this.pointList.length, //沿着路径细分数
+        }
+      );
+      var material = new THREE.MeshPhongMaterial({
+        color: 0x0000ff,
+        side: THREE.DoubleSide, //两面可见
+      }); //材质对象
+      let wallMesh = new THREE.Mesh(geometry, material); //网格模型对象
+      this.WallGroup.add(wallMesh);
+    },
+  },
+  watch: {
+    dialogVisible(val) {
+      // 小窗口现实隐藏控制视角和控制
+      console.log("dialogVisible", val);
+      if (val) {
+        this.recoveryCameraPotion();
+      } else {
+        if (!this.controls) {
+          this.controls = new THREE.OrbitControls(this.camera);
+        }
+      }
+      let threeDom = document.getElementById("cesiumContainer");
+      threeDom.removeEventListener("click", this.addSpritePoint, false);
     },
   },
 };
@@ -302,6 +324,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
+@import "@/assets/theme/option.scss";
 #progressShow {
   width: 100%;
   height: 100%;
@@ -353,8 +376,8 @@ export default {
     flex: 1;
     z-index: 1;
     box-shadow: -5px 0 5px -5px #cecece;
-    background: #f1f3f7;
-    border-right: 1px solid #f1f3f7;
+    background: $bodyBgColor;
+    border-right: 1px solid $bodyBgColor;
   }
   .cesium-container {
     position: absolute;

@@ -2,7 +2,7 @@
   <div class="floorPanel">
     <slot name="header"></slot>
     <div v-for="(item, index) in data" :key="index" class="item float_L">
-      <img :src="item.url" :alt="item.name" srcset="" class="material" />
+      <img :src="item.url" :alt="item.name" srcset="" class="material" @click="imgClick(item, index)" :class="{active: activeIndex === index}"/>
     </div>
   </div>
 </template>
@@ -15,9 +15,25 @@ export default {
       default: [], //默认值
     },
   },
+  data: () => {
+    return {
+      activeIndex: -1
+    }
+  },
   created() {
     console.log("this.data", this.data);
   },
+  methods: {
+    imgClick(data, i) {
+      this.activeIndex = i;
+      this.parendData = {
+        name: "选择地板",
+        parentName: "floor",
+        data: data
+      };
+      this.$emit("getChildData", this.parendData);
+    }
+  }
 };
 </script>
 
@@ -43,6 +59,10 @@ export default {
   }
   .material {
     width: 100%;
+  }
+  .material.active {
+    -webkit-box-shadow: 0 2px 6px 1px #c6cad1;
+      box-shadow: 0 2px 6px 1px #c6cad1;
   }
 }
 </style>

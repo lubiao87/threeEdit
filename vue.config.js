@@ -128,8 +128,8 @@ module.exports = {
 
   // 它支持webPack-dev-server的所有选项
   devServer: {
-    // host: '172.16.13.206', //也可以直接写IP地址这样方便真机测试
-    host: '127.0.0.1', //也可以直接写IP地址这样方便真机测试
+    host: '172.16.13.198', //也可以直接写IP地址这样方便真机测试
+    // host: '127.0.0.1', //也可以直接写IP地址这样方便真机测试
     port: 2001, // 端口号
     https: false, // https:{type:Boolean}
     open: true, //配置自动启动浏览器

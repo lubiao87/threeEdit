@@ -1,10 +1,10 @@
 
 /* eslint-disable */
 import { mapState, mapGetters, mapActions } from "vuex"; //先要引入
-import { Message } from 'element-ui';
+// import { Message } from 'element-ui';
 
 export const listSearch = {
-  data: function (params) {
+  data: function () {
     return {
       Userdata: null
     }

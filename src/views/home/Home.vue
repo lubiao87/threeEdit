@@ -1,15 +1,15 @@
 <template>
   <div class="quanjing flexBox" id="quanjing-ststem">
-    <div id="cesiumContainer" class="cesium-container"></div>
+    <div id="cesiumContainer" class="cesium-container" :style="{cursor: cursorName}"></div>
     <div class="hearder">
       <hearder />
     </div>
     <div class="tool-bar">
       <leftPanel @getChildData="getChildData" />
     </div>
-    <div id="progressShow" v-show="baifenbiShow">
+    <!-- <div id="progressShow" v-show="baifenbiShow">
       <progress-page :baifenbi="baifenbi" />
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -42,6 +42,7 @@ export default {
       listGroup: null,
       clearPosition: new THREE.Vector3(0, 20, 0.1),
       pointList: [],
+      cursorName: 'default'
     };
   },
   mounted() {
@@ -109,7 +110,7 @@ export default {
       // model
       // let loader = new THREE.GLTFLoader();
       var gridHelper = new THREE.GridHelper(30, 30);
-      this.scene.add( gridHelper );
+      this.scene.add(gridHelper);
       this.addTexture();
 
       this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -206,64 +207,53 @@ export default {
     addTexture() {
       let geometry = new THREE.PlaneGeometry(30, 30); //矩形平面
       let material = new THREE.MeshLambertMaterial({
-        color: "#ccc",
+        color: "#fff",
         side: THREE.DoubleSide, //两面可见
+        // transparent: true,
+        // opacity:0.1,
       }); //材质对象Material
       let mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
-      mesh.position.set(0, -0.01, 0)
+      mesh.position.set(0, -0.01, 0);
       mesh.rotateX(Math.PI / 2);
-      
+
       this.listGroup.add(mesh);
       // this.scene.add(mesh); //网格模型添加到场景中
     },
-    addFloorTexture() {
-      let geometry = new THREE.PlaneGeometry(20, 10); //矩形平面
-
-      // TextureLoader创建一个纹理加载器对象，可以加载图片作为几何体纹理
-      let textureLoader = new THREE.TextureLoader();
-      // 执行load方法，加载纹理贴图成功后，返回一个threejs对象Texture
-      let texture = textureLoader.load("img/floor/t1.png");
-
-      // 设置阵列模式   默认ClampToEdgeWrapping  RepeatWrapping：阵列  镜像阵列：MirroredRepeatWrapping
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      // uv两个方向纹理重复数量
-      texture.repeat.set(20, 10);
-      // 偏移效果
-      // texture.offset = new THREE.Vector2(0.5, 0.5)
-
-      let material = new THREE.MeshLambertMaterial({
-        // 设置纹理贴图：Texture对象作为材质map属性的属性值
-        map: texture,
-        side: THREE.DoubleSide, //两面可见
-      }); //材质对象Material
-      let mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
-      mesh.rotateX(Math.PI / 2);
-      this.scene.add(mesh); //网格模型添加到场景中
-    },
     getChildData(data) {
-      console.log("获取chidren数据", data);
+      // console.log("获取chidren数据", data);
       if (data.parentName) {
         switch (data.name) {
           case "绘画墙轮廓":
+            this.cursorName = 'crosshair';
+            this.pointList = [];
             this.WallGroup.children = [];
             this.recoveryCameraPotion();
             let threeDom = document.getElementById("cesiumContainer");
+            threeDom.removeEventListener("click", this.addSpritePoint, false);
             threeDom.addEventListener("click", this.addSpritePoint, false);
             break;
           case "闭合墙轮廓":
             console.log("闭合");
+            this.cursorName = 'auto';
             this.newWallMesh(this.pointList[0]);
+            this.pointList.push(this.pointList[0]);
+            let threeDom3 = document.getElementById("cesiumContainer");
+            threeDom3.removeEventListener("click", this.addSpritePoint, false);
             break;
           case "确定墙轮廓":
             console.log("确定墙轮廓");
+            this.cursorName = 'auto';
             if (!this.controls) {
               this.controls = new THREE.OrbitControls(this.camera);
             }
             this.Three_Points(this.pointList);
-            this.pointList = [];
+            // this.pointList = [];
             let threeDom2 = document.getElementById("cesiumContainer");
             threeDom2.removeEventListener("click", this.addSpritePoint, false);
+            break;
+          case "选择地板":
+            console.log("选择地板", data);
+            this.newFloorTexture(data);
             break;
           default:
             // if (!this.controls) {
@@ -275,6 +265,7 @@ export default {
       }
     },
     newWallMesh(point) {
+      // 创建墙体
       var shape = new THREE.Shape();
       /**四条直线绘制一个矩形轮廓*/
       shape.moveTo(0, 0.1); //起点
@@ -297,11 +288,47 @@ export default {
         }
       );
       var material = new THREE.MeshPhongMaterial({
-        color: 0x0000ff,
+        color: "#666",
         side: THREE.DoubleSide, //两面可见
       }); //材质对象
       let wallMesh = new THREE.Mesh(geometry, material); //网格模型对象
       this.WallGroup.add(wallMesh);
+    },
+    newFloorTexture(data) {
+      if(this.floorMesh){
+        this.scene.remove(this.floorMesh);
+        this.floorMesh = null;
+      }
+      // 通过顶点定义轮廓
+      let points = [];
+      this.threePoints.forEach((item) => {
+        points.push(new THREE.Vector3(item.x, item.z, 1));
+      });
+      var shape = new THREE.Shape(points);
+      console.log(points, this.threePoints);
+      let geometry = new THREE.ShapeGeometry(shape, 25); //矩形平面
+      // var geometry = new THREE.PlaneGeometry(20, 10); //矩形平面
+      // TextureLoader创建一个纹理加载器对象，可以加载图片作为几何体纹理
+      let textureLoader = new THREE.TextureLoader();
+      // 执行load方法，加载纹理贴图成功后，返回一个threejs对象Texture
+      let texture = textureLoader.load(data.data.url);
+
+      // 设置阵列模式   默认ClampToEdgeWrapping  RepeatWrapping：阵列  镜像阵列：MirroredRepeatWrapping
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      // uv两个方向纹理重复数量
+      texture.repeat.set(1, 1);
+      // 偏移效果
+      // texture.offset = new THREE.Vector2(0.5, 0.5)
+
+      let material = new THREE.MeshLambertMaterial({
+        // 设置纹理贴图：Texture对象作为材质map属性的属性值
+        map: texture,
+        side: THREE.DoubleSide, //两面可见
+      }); //材质对象Material
+      this.floorMesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+      this.floorMesh.rotateX(Math.PI / 2);
+      this.scene.add(this.floorMesh); //网格模型添加到场景中
     },
   },
   watch: {
@@ -314,6 +341,7 @@ export default {
         if (!this.controls) {
           this.controls = new THREE.OrbitControls(this.camera);
         }
+        this.cursorName = 'auto';
       }
       let threeDom = document.getElementById("cesiumContainer");
       threeDom.removeEventListener("click", this.addSpritePoint, false);

@@ -54,6 +54,7 @@ export default {
           title: "墙体",
           name: "wall",
           componentName: "wallPanel",
+          header: "可拖拽模型到此面板增加素材",
           data:{
             drawSize:{
               h: 6,
@@ -65,7 +66,7 @@ export default {
           title: "地板",
           name: "floor",
           componentName: "floorPanel",
-          header: "可拖拽文件到此面板增加素材",
+          header: "可拖拽图片到此面板增加素材",
           data: [
             {
               name: "1x1太阳能板",
@@ -194,7 +195,8 @@ export default {
   .company_use {
     width: 100%;
     height: 40px;
-    text-align: center;
+    padding-right: 40px;
+    text-align: right;
     line-height: 40px;
     font-size: 14px;
     color: $lessTextColor_3;

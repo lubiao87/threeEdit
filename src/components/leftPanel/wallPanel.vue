@@ -4,6 +4,7 @@
     <!-- <div v-for="(item, index) in data" :key="index" class="item float_L">
       <img :src="item.url" :alt="item.name" srcset="" class="material" />
     </div> -->
+     <slot name="header"></slot>
     <div class="contentTabAreaNew">
       <div class="tabItemBig active float_L">地基尺寸</div>
       <span class="edit float_R" @click="changeWall">修改</span>
@@ -41,7 +42,7 @@
           <span>{{ drawSize.w }} m</span><span class="desc">宽</span>
         </div>
       </div>
-      <el-button type="primary" @click="painting">绘画</el-button>
+      <el-button type="primary" @click="painting">重绘</el-button>
       <el-button type="primary" @click="wallClose">闭合</el-button>
     </dialogp>
   </div>
@@ -171,7 +172,7 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
-  width: 270px;
+  width: 280px;
   .contentTabAreaNew {
     width: 100%;
     height: 50px;
@@ -201,6 +202,7 @@ export default {
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
+    padding-left: 10px;
   }
   .item.changeSizeArea {
     -webkit-box-orient: horizontal;

@@ -122,7 +122,7 @@ export default {
       var gridHelper = new THREE.GridHelper(30, 30);
       this.scene.add(gridHelper);
       this.addTexture();
-      
+
       this.renderer = new THREE.WebGLRenderer({ antialias: true });
       this.renderer.setPixelRatio(window.devicePixelRatio);
       // this.renderer.setClearColor("#375e99", 1); //设置背景颜色
@@ -155,8 +155,8 @@ export default {
       }
        this.composer.render();
       requestAnimationFrame(this.animate);
-     
-      this.renderer.render(this.scene, this.camera);
+
+      // this.renderer.render(this.scene, this.camera);
     },
     addSpritePoint(event) {
       // 增加点
@@ -177,7 +177,7 @@ export default {
       // 选择墙壁
       this.setIntersects(event, this.casementGroup.children, (intersects) => {
         if (intersects.length > 0) {
-          
+
 
           let mesh = intersects[0].object;
            this.OutlinePass.selectedObjects = [mesh];
@@ -199,20 +199,20 @@ export default {
       // 选择墙壁
       this.setIntersects(event, this.casementGroup.children, (intersects) => {
         if (intersects.length > 0) {
-          
+
           this.cursorName = "pointer";
           let mesh = intersects[0].object;
           this.scene.remove(this.border);
           this.border = new THREE.BoxHelper(mesh, "#5b78e7"); //设置边框，这个边框不会旋转
           this.scene.add(this.border); //网格模型添加到场景中
-          
+
         } else {
           this.cursorName = "auto";
           if (this.border) {
             this.scene.remove(this.border);
             this.border = null;
           }
-          
+
           // this.OutlinePass.selectedObjects = [];
         }
       });

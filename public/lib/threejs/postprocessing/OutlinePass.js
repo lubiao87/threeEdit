@@ -1,7 +1,7 @@
 /**
  * @author spidersharma / http://eduperiment.com/
  */
-import * as THREE from "three";
+// import * as THREE from "three";
 THREE.OutlinePass = function ( resolution, scene, camera, selectedObjects ) {
 
 	this.renderScene = scene;

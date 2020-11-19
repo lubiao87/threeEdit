@@ -38,12 +38,14 @@
 <script>
 import floorPanel from "./floorPanel";
 import wallPanel from "./wallPanel";
+import casementPanel from "./casementPanel";
 
 export default {
   name: "leftPanel",
   components: {
     floorPanel,
-    wallPanel
+    wallPanel,
+    casementPanel
   },
   data() {
     return {
@@ -87,6 +89,13 @@ export default {
               parentName: "floor",
             },
           ],
+        },
+        {
+          title: "窗户",
+          name: "casement",
+          componentName: "casementPanel",
+          header: "可拖拽模型到此面板增加素材",
+          data: [],
         },
         {
           title: "标签",

@@ -1,6 +1,10 @@
 <template>
   <div class="quanjing flexBox" id="quanjing-ststem">
-    <div id="cesiumContainer" class="cesium-container" :style="{cursor: cursorName}"></div>
+    <div
+      id="cesiumContainer"
+      class="cesium-container"
+      :style="{ cursor: cursorName }"
+    ></div>
     <div class="hearder">
       <hearder />
     </div>
@@ -39,10 +43,14 @@ export default {
       baifenbi: 0, // 进度条 0 - 100
       baifenbiShow: false,
       pointsIndex: 0, // 视角线进度点
-      listGroup: null,
+      assistGroup: null,
       clearPosition: new THREE.Vector3(0, 20, 0.1),
       pointList: [],
-      cursorName: 'default'
+      cursorName: "default",
+      // 创建通道,显示外轮廓边框
+      OutlinePass: null,
+      //效果合成器
+      composer: null,
     };
   },
   mounted() {
@@ -61,8 +69,8 @@ export default {
         45,
         threeDom.getBoundingClientRect().width /
           threeDom.getBoundingClientRect().height,
-        0.25,
-        100
+        1,
+        1000
       );
       this.camera.position = new THREE.Vector3(10, 60, 20);
       // this.camera.lookAt(new THREE.Vector3(0, 0, 0));
@@ -101,18 +109,20 @@ export default {
       // 坐标系辅助显示
       let axesHelper = new THREE.AxesHelper(10);
       this.scene.add(axesHelper);
-      this.listGroup = new THREE.Group();
-      this.scene.add(this.listGroup);
+      this.assistGroup = new THREE.Group();
+      this.scene.add(this.assistGroup);
       this.points = new THREE.Group();
       this.scene.add(this.points);
-      this.WallGroup = new THREE.Group();
+      this.WallGroup = new THREE.Group(); // 墙体组合
       this.scene.add(this.WallGroup);
+      this.casementGroup = new THREE.Group(); // 窗户组合
+      this.scene.add(this.casementGroup);
       // model
       // let loader = new THREE.GLTFLoader();
       var gridHelper = new THREE.GridHelper(30, 30);
       this.scene.add(gridHelper);
       this.addTexture();
-
+      
       this.renderer = new THREE.WebGLRenderer({ antialias: true });
       this.renderer.setPixelRatio(window.devicePixelRatio);
       // this.renderer.setClearColor("#375e99", 1); //设置背景颜色
@@ -122,24 +132,14 @@ export default {
       );
       this.renderer.gammaOutput = true;
 
+      this.setOutlinePass();
       threeDom.appendChild(this.renderer.domElement);
       // this.addFloorTexture(); // 增加地板
       // this.addCircleGeometry(); // 增加vr点
       // this.addEventListenerFn(); // 绑定事件
       window.addEventListener("resize", this.onWindowResize, false);
     },
-    onWindowResize() {
-      let threeDom = document.getElementById("cesiumContainer");
-      this.camera.aspect =
-        threeDom.getBoundingClientRect().width /
-        threeDom.getBoundingClientRect().height;
-      this.camera.updateProjectionMatrix();
 
-      this.renderer.setSize(
-        threeDom.getBoundingClientRect().width,
-        threeDom.getBoundingClientRect().height
-      );
-    },
     animate() {
       if (this.animatePoints) {
         if (this.pointsIndex < this.animatePoints.length - 1) {
@@ -153,13 +153,14 @@ export default {
       } else {
         this.pointsIndex = 0;
       }
+       this.composer.render();
       requestAnimationFrame(this.animate);
-
+     
       this.renderer.render(this.scene, this.camera);
     },
     addSpritePoint(event) {
       // 增加点
-      this.setIntersects(event, (intersects) => {
+      this.setIntersects(event, this.assistGroup.children, (intersects) => {
         if (intersects.length > 0) {
           let point = intersects[0].point;
           if (this.pointList.length > 0) {
@@ -172,59 +173,57 @@ export default {
         // console.log(layerOpen)
       });
     },
-    onMousemove(event) {
-      this.setIntersects(event, (intersects) => {
-        // console.log(intersects)
+    clickSelectWall(event) {
+      // 选择墙壁
+      this.setIntersects(event, this.casementGroup.children, (intersects) => {
         if (intersects.length > 0) {
-          this.listGroup.children.forEach((element) => {
-            element.material.color.set("#fff");
-          });
-          document.getElementById("cesiumContainer").style.cursor = "pointer";
-          intersects[0].object.material.color.set("#0ff");
+          
+
+          let mesh = intersects[0].object;
+           this.OutlinePass.selectedObjects = [mesh];
+          this.scene.updateMatrixWorld(true);
+          var worldPosition = new THREE.Vector3();
+          mesh.getWorldPosition(worldPosition)
+          console.log(mesh,this.OutlinePass);
+          // let threeDom = document.getElementById("cesiumContainer");
+          // threeDom.removeEventListener(
+          //   "mousemove",
+          //   this.mousemoveSelectWall,
+          //   false
+          // );
+        }
+        // console.log(layerOpen)
+      });
+    },
+    mousemoveSelectWall(event) {
+      // 选择墙壁
+      this.setIntersects(event, this.casementGroup.children, (intersects) => {
+        if (intersects.length > 0) {
+          
+          this.cursorName = "pointer";
+          let mesh = intersects[0].object;
+          this.scene.remove(this.border);
+          this.border = new THREE.BoxHelper(mesh, "#5b78e7"); //设置边框，这个边框不会旋转
+          this.scene.add(this.border); //网格模型添加到场景中
+          
         } else {
-          document.getElementById("cesiumContainer").style.cursor = "inherit";
-          if (!this.intersects) {
-            this.listGroup.children.forEach((element) => {
-              element.material.color.set("#fff");
-            });
+          this.cursorName = "auto";
+          if (this.border) {
+            this.scene.remove(this.border);
+            this.border = null;
           }
+          
+          // this.OutlinePass.selectedObjects = [];
         }
       });
     },
-    setIntersects(event, callback) {
-      let threeDom = document.getElementById("cesiumContainer");
-      event.preventDefault();
-      // console.log('offsetLeft', event)
-      this.mouse.x =
-        (event.offsetX / threeDom.getBoundingClientRect().width) * 2 - 1;
-      this.mouse.y =
-        -(event.offsetY / threeDom.getBoundingClientRect().height) * 2 + 1;
-      this.raycaster.setFromCamera(this.mouse, this.camera);
 
-      let intersects = this.raycaster.intersectObjects(this.listGroup.children);
-      callback(intersects);
-    },
-    addTexture() {
-      let geometry = new THREE.PlaneGeometry(30, 30); //矩形平面
-      let material = new THREE.MeshLambertMaterial({
-        color: "#fff",
-        side: THREE.DoubleSide, //两面可见
-        // transparent: true,
-        // opacity:0.1,
-      }); //材质对象Material
-      let mesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
-      mesh.position.set(0, -0.01, 0);
-      mesh.rotateX(Math.PI / 2);
-
-      this.listGroup.add(mesh);
-      // this.scene.add(mesh); //网格模型添加到场景中
-    },
     getChildData(data) {
       // console.log("获取chidren数据", data);
       if (data.parentName) {
         switch (data.name) {
           case "绘画墙轮廓":
-            this.cursorName = 'crosshair';
+            this.cursorName = "crosshair";
             this.pointList = [];
             this.WallGroup.children = [];
             this.recoveryCameraPotion();
@@ -234,7 +233,7 @@ export default {
             break;
           case "闭合墙轮廓":
             console.log("闭合");
-            this.cursorName = 'auto';
+            this.cursorName = "auto";
             this.newWallMesh(this.pointList[0]);
             this.pointList.push(this.pointList[0]);
             let threeDom3 = document.getElementById("cesiumContainer");
@@ -242,7 +241,7 @@ export default {
             break;
           case "确定墙轮廓":
             console.log("确定墙轮廓");
-            this.cursorName = 'auto';
+            this.cursorName = "auto";
             if (!this.controls) {
               this.controls = new THREE.OrbitControls(this.camera);
             }
@@ -254,6 +253,40 @@ export default {
           case "选择地板":
             console.log("选择地板", data);
             this.newFloorTexture(data);
+            break;
+          case "增加窗口":
+            console.log("增加窗口", data);
+            let option = {
+              width: data.data.casementSize.w,
+              height: data.data.casementSize.h,
+              depth: data.data.casementSize.l,
+              addMesh: true,
+              y: data.data.casementSize.l / 2,
+            };
+            console.log("option", option);
+            this.casementMeth = this.paintGlass(option);
+            break;
+          case "确定窗户":
+            console.log("确定窗户", data);
+            this.cursorName = "auto";
+            if (!this.controls) {
+              this.controls = new THREE.OrbitControls(this.camera);
+            }
+            break;
+          case "挖槽破窗":
+            console.log("挖槽破窗", data);
+            let threeDom4 = document.getElementById("cesiumContainer");
+            threeDom4.removeEventListener("click", this.clickSelectWall, false);
+            threeDom4.addEventListener("click", this.clickSelectWall, false);
+            threeDom4.addEventListener(
+              "mousemove",
+              this.mousemoveSelectWall,
+              false
+            );
+            this.cursorName = "auto";
+            if (!this.controls) {
+              this.controls = new THREE.OrbitControls(this.camera);
+            }
             break;
           default:
             // if (!this.controls) {
@@ -292,10 +325,11 @@ export default {
         side: THREE.DoubleSide, //两面可见
       }); //材质对象
       let wallMesh = new THREE.Mesh(geometry, material); //网格模型对象
+      wallMesh.name = '墙壁' + this.pointList.length
       this.WallGroup.add(wallMesh);
     },
     newFloorTexture(data) {
-      if(this.floorMesh){
+      if (this.floorMesh) {
         this.scene.remove(this.floorMesh);
         this.floorMesh = null;
       }
@@ -341,7 +375,7 @@ export default {
         if (!this.controls) {
           this.controls = new THREE.OrbitControls(this.camera);
         }
-        this.cursorName = 'auto';
+        this.cursorName = "auto";
       }
       let threeDom = document.getElementById("cesiumContainer");
       threeDom.removeEventListener("click", this.addSpritePoint, false);

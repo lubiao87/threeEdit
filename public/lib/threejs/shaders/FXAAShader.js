@@ -7,7 +7,7 @@
  * - WebGL port by @supereggbert
  * http://www.glge.org/demos/fxaa/
  */
-import * as THREE from "three";
+// import * as THREE from "three";
 THREE.FXAAShader = {
 
 	uniforms: {

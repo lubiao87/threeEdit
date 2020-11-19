@@ -3,7 +3,7 @@
  * @author mrdoob / http://mrdoob.com
  * Running this will allow you to drag three-r93.js objects around the screen.
  */
-import * as THREE from "three";
+// import * as THREE from "three";
 THREE.DragControls = function(_objects, _camera, _domElement) {
   if (_objects instanceof THREE.Camera) {
     console.warn(

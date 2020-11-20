@@ -4,13 +4,6 @@
       <div @mousedown.stop="mousedown">
         <h2 v-html="title"></h2>
         <i class="el-icon-close" @click="closeDialog"></i>
-        <!-- <div @click.stop="closeDialog()" style="position: absolute;top: 0px; right: 20px;">
-        <span>
-          <svg class="icon" aria-hidden="false">
-            <use xlink:href='#el-icon-ext-close'></use>
-          </svg>
-        </span>
-        </div> -->
       </div>
     </el-header>
     <el-main>
@@ -54,6 +47,7 @@ import { listSearchMixin } from "../../mixin"; //混淆请求
       closeDialog(e) {
         this.Set_DialogVisible(false)
         // this.Set_logQuery(false)
+        this.$emit("queryDialog", false);
       },
       queryDialog(){
         this.$emit("queryDialog", true);
@@ -106,6 +100,8 @@ h2 {
     top: 60px;
     right: 0;
     border-radius: 2px;
+    z-index: 2;
+    border: 1px solid;
   }
 
   .dialog-footer {
@@ -114,6 +110,7 @@ h2 {
 
   .el-main {
     background-color: white;
+    padding: 0 10px;
   }
 
   .el-footer {

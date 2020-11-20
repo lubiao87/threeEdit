@@ -72,6 +72,7 @@ export const listSearch = {
         rotationZ: data.rotationZ || 0,
         addMesh: data.addMesh || false,
         color: data.color || "0x58acfa",
+        name: data.name || ""
       };
       if (options.color) {
         options.opacity = parseFloat(options.color.split(",")[3].split(")")[0]);
@@ -92,12 +93,13 @@ export const listSearch = {
       // options.height
       //创建网格对象以及进行位置的设定
       var mesh = new THREE.Mesh(gemotery, material);
+      mesh.name = options.name;
       mesh.scale.set(options.width, options.depth, options.height);
       mesh.position.set(options.x, options.y, options.z);
 
-      mesh.rotation.z = Math.PI * options.rotationZ;
-      mesh.rotation.x = Math.PI * options.rotationX;
-      mesh.rotation.y = Math.PI * options.rotationY;
+      mesh.rotation.z =options.rotationZ * Math.PI / 180;
+      mesh.rotation.x =options.rotationX * Math.PI / 180;
+      mesh.rotation.y =options.rotationY * Math.PI / 180;
 
       if (options.addMesh) {
         this.casementGroup.add(mesh);

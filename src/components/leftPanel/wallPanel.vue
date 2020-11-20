@@ -20,17 +20,38 @@
       </div>
     </div>
     <dialogp :id="layerId" @queryDialog="queryDialog">
-      <div class="item changeSizeArea">
-        <div class="changeSizeBtn">
-          <span>{{ drawSize.h }} m</span><span class="desc">长</span>
+      <el-row style="position: relative; margin-top: 10px;">
+        <el-select v-model="GeometryType" placeholder="请选择">
+          <el-option
+            v-for="item in GeometryOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          >
+          </el-option>
+        </el-select>
+        <span class="inputName">轮廓：</span>
+      </el-row>
+      <el-row style="margin-top: 10px;">
+        <span class="inputName">名称：</span>
+        <el-input v-model="wallName" placeholder="请输入内容"></el-input>
+      </el-row>
+      <div class="changeSizeArea" v-if="GeometryType === '四边形'">
+        <div class="option-list" style="padding-left: 0">
+          <avue-input-number v-model="drawSizeH"></avue-input-number>
+          <span class="inputName">长：</span>
         </div>
-        <i class="margin_i"></i>
-        <div class="changeSizeBtn">
-          <span>{{ drawSize.w }} m</span><span class="desc">宽</span>
+        <div class="option-list">
+          <avue-input-number v-model="drawSizeW"></avue-input-number>
+          <span class="inputName">宽：</span>
         </div>
       </div>
-      <el-button type="primary" @click="painting">重绘</el-button>
-      <el-button type="primary" @click="wallClose">闭合</el-button>
+      <el-row class="btn-list">
+        <el-button size="small">增加</el-button>
+        <el-button size="small">撤销</el-button>
+        <el-button size="small" @click="painting">自绘</el-button>
+        <el-button size="small" @click="wallClose">闭合</el-button>
+      </el-row>
     </dialogp>
   </div>
 </template>
@@ -54,15 +75,13 @@ export default {
   data: () => {
     return {
       content: "",
-      layerId: 1,
+      layerId: Math.random().toString(36).substr(3, 10),
       drawPoint: [],
       drawIng: false,
       layerOpen: null,
       parendData: {},
-      drawSize: {
-        h: 6,
-        w: 10,
-      },
+      drawSizeH: 6,
+      drawSizeW: 10,
       activeIndex: -1,
       data: [
         {
@@ -78,9 +97,35 @@ export default {
           parentName: "wall",
         },
       ],
+      GeometryType: "四边形",
+      GeometryOptions: [
+        {
+          value: "四边形",
+          label: "四边形",
+        },
+        {
+          value: "圆形",
+          label: "圆形",
+        },
+        {
+          value: "三角形",
+          label: "三角形",
+        },
+      ],
+      wallName: "",
     };
   },
   created() {
+    let date = new Date();
+    let name =
+      "墙_" +
+      date.getFullYear() +
+      (date.getMonth() + 1) +
+      date.getDate() +
+      date.getHours() +
+      date.getMinutes() +
+      date.getSeconds();
+    this.wallName = name;
     console.log("this.data", this.data);
   },
   methods: {
@@ -120,11 +165,19 @@ export default {
       };
       this.$emit("getChildData", this.parendData);
     },
-    queryDialog() {
-      this.parendData = {
-        name: "确定墙轮廓",
-        parentName: "wall",
-      };
+    queryDialog(flag) {
+      if (flag) {
+        this.parendData = {
+          name: "确定墙轮廓",
+          parentName: "wall",
+        };
+      } else {
+        this.parendData = {
+          name: "取消墙轮廓",
+          parentName: "wall",
+        };
+      }
+
       this.$emit("getChildData", this.parendData);
     },
   },
@@ -154,10 +207,12 @@ export default {
           }
         });
         console.log(Xmax, Xmin, Hmax, Hmin);
-        this.drawSize = {
-          w: (Hmax - Hmin).toFixed(2),
-          h: (Xmax - Xmin).toFixed(2),
-        };
+        // this.drawSize = {
+        //   w: (Hmax - Hmin).toFixed(2),
+        //   h: (Xmax - Xmin).toFixed(2),
+        // };
+        this.drawSizeW = (Hmax - Hmin).toFixed(2);
+        this.drawSizeH = (Xmax - Xmin).toFixed(2);
       }
     },
   },
@@ -174,6 +229,9 @@ export default {
   top: 0;
   right: 0;
   width: 280px;
+  input[type="text"] {
+    padding-left: 60px;
+  }
   .contentTabAreaNew {
     width: 100%;
     height: 50px;
@@ -231,6 +289,118 @@ export default {
         font-size: 12px;
         margin-left: 6px;
       }
+    }
+  }
+  .changeSizeArea {
+    margin-top: 10px;
+    overflow: hidden;
+    position: relative;
+    input[type="text"] {
+      padding-left: 60px;
+      background-color: transparent;
+    }
+  }
+
+  .el-collapse {
+    border-top: 0px solid transparent;
+  }
+  .el-collapse-item__content {
+    position: relative;
+  }
+  .el-select {
+    width: 100%;
+  }
+  input[type="text"] {
+    background-color: transparent;
+    border-color: $borderColor;
+    color: $lessTextColor;
+    text-align: center;
+  }
+  .contentTabAreaNew {
+    width: 100%;
+    height: 50px;
+    .tabItemBig {
+      height: 50px;
+      line-height: 50px;
+      margin-left: 25px;
+      font-size: 16px;
+      color: #666;
+      display: inline-block;
+    }
+    .edit {
+      font-size: 16px;
+      color: #ff4555;
+      float: right;
+      line-height: 50px;
+      margin-right: 25px;
+      cursor: pointer;
+    }
+  }
+  .changeSizeArea {
+    margin-top: 10px;
+    overflow: hidden;
+    position: relative;
+    input[type="text"] {
+      padding-left: 60px;
+      background-color: transparent;
+    }
+  }
+  .inputName {
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    z-index: 1;
+    width: 58px;
+    text-align: right;
+  }
+  .btn-list {
+    margin-top: 10px;
+    .el-button + .el-button {
+      margin-left: 4px;
+    }
+  }
+  .hh {
+    text-align: left;
+    padding: 10px;
+  }
+  .option-list {
+    position: relative;
+    width: 50%;
+    float: left;
+    padding-left: 4px;
+    // margin-top: 10px;
+    .inputName {
+      top: 6px;
+    }
+    .name {
+      position: absolute;
+      left: 8px;
+      top: 3px;
+      z-index: 1;
+    }
+    .el-input-number {
+      width: 100%;
+      line-height: 24px;
+    }
+    .el-input__inner {
+      height: 34px;
+      line-height: 34px;
+    }
+    .el-input-number.is-controls-right .el-input-number__decrease,
+    .el-input-number.is-controls-right .el-input-number__increase {
+      line-height: 16px;
+      height: 16px;
+    }
+    .el-input-number.is-controls-right .el-input__inner {
+      padding-left: 54px;
+      padding-right: 24px;
+    }
+    .el-input-number__decrease,
+    .el-input-number__increase {
+      width: 28px;
+    }
+    [class^="el-icon-"] {
+      line-height: 12px;
     }
   }
 }

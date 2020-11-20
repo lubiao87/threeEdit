@@ -77,7 +77,7 @@ export default {
       this.camera.position = new THREE.Vector3(10, 60, 20);
       // this.camera.lookAt(new THREE.Vector3(0, 0, 0));
       this.camera.updateProjectionMatrix();
-      this.controls = new THREE.OrbitControls(this.camera);
+      this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
       // this.controls.target.set(0, 0, 0);
       // this.controls.update();
 
@@ -263,10 +263,19 @@ export default {
             console.log("确定墙轮廓");
             this.cursorName = "auto";
             if (!this.controls) {
-              this.controls = new THREE.OrbitControls(this.camera);
+              this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
             }
             this.Three_Points(this.pointList);
             // this.pointList = [];
+            let threeDom6 = document.getElementById("cesiumContainer");
+            threeDom6.removeEventListener("click", this.addSpritePoint, false);
+            break;
+          case "取消墙轮廓":
+            console.log("取消墙轮廓");
+            this.cursorName = "auto";
+            if (!this.controls) {
+              this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
+            }
             let threeDom2 = document.getElementById("cesiumContainer");
             threeDom2.removeEventListener("click", this.addSpritePoint, false);
             break;
@@ -285,7 +294,11 @@ export default {
               y: data.data.casementPositon.y,
               x: data.data.casementPositon.x,
               z: data.data.casementPositon.z,
+              rotationX: data.data.casementAngle.x,
+              rotationY: data.data.casementAngle.y,
+              rotationZ: data.data.casementAngle.z,
               color: data.data.casementColor,
+              name: data.data.casementName
             };
             console.log("option", option);
             this.paintGlass(option);
@@ -298,7 +311,7 @@ export default {
             console.log("修改窗户", data);
             this.casementMeth = null;
             if (!this.controls) {
-              this.controls = new THREE.OrbitControls(this.camera);
+              this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
             }
             let threeDom5 = document.getElementById("cesiumContainer");
             threeDom5.removeEventListener(
@@ -321,7 +334,7 @@ export default {
             console.log("确定窗户", data);
             this.cursorName = "auto";
             if (!this.controls) {
-              this.controls = new THREE.OrbitControls(this.camera);
+              this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
             }
 
             break;
@@ -337,12 +350,12 @@ export default {
             );
             this.cursorName = "auto";
             if (!this.controls) {
-              this.controls = new THREE.OrbitControls(this.camera);
+              this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
             }
             break;
           default:
             // if (!this.controls) {
-            //   this.controls = new THREE.OrbitControls(this.camera);
+            //   this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
             // }
 
             break;
@@ -421,22 +434,22 @@ export default {
       this.scene.add(this.floorMesh); //网格模型添加到场景中
     },
   },
-  watch: {
-    dialogVisible(val) {
-      // 小窗口现实隐藏控制视角和控制
-      console.log("dialogVisible", val);
-      if (val) {
-        this.recoveryCameraPotion();
-      } else {
-        if (!this.controls) {
-          this.controls = new THREE.OrbitControls(this.camera);
-        }
-        this.cursorName = "auto";
-      }
-      let threeDom = document.getElementById("cesiumContainer");
-      threeDom.removeEventListener("click", this.addSpritePoint, false);
-    },
-  },
+  // watch: {
+  //   dialogVisible(val) {
+  //     // 小窗口现实隐藏控制视角和控制
+  //     console.log("dialogVisible", val);
+  //     if (val) {
+  //       this.recoveryCameraPotion();
+  //     } else {
+  //       if (!this.controls) {
+  //         this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
+  //       }
+  //       this.cursorName = "auto";
+  //     }
+  //     let threeDom = document.getElementById("cesiumContainer");
+  //     threeDom.removeEventListener("click", this.addSpritePoint, false);
+  //   },
+  // },
 };
 </script>
 

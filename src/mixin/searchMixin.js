@@ -69,30 +69,35 @@ export const listSearch = {
         z: data.z || 0,
         rotationX: data.rotationX || 0,
         rotationY: data.rotationY || 0,
-        rotationZz: data.rotationZ || 0,
+        rotationZ: data.rotationZ || 0,
         addMesh: data.addMesh || false,
+        color: data.color || "0x58acfa",
       };
+      if (options.color) {
+        options.opacity = parseFloat(options.color.split(",")[3].split(")")[0]);
+      } else {
+        options.opacity = 0.6;
+      }
+      console.log("options.opacity", options.opacity);
       var material = new THREE.MeshBasicMaterial({
-        color: 0x58acfa,
+        color: options.color,
         transparent: true,
-        opacity: 0.6,
+        opacity: options.opacity,
       });
 
       //创建长方体几何体
-      var gemotery = new THREE.BoxGeometry(
-        options.width,
-        options.depth,
-        options.height
-      );
-
+      var gemotery = new THREE.BoxGeometry(1, 1, 1);
+      // options.width,
+      // options.depth,
+      // options.height
       //创建网格对象以及进行位置的设定
       var mesh = new THREE.Mesh(gemotery, material);
+      mesh.scale.set(options.width, options.depth, options.height);
       mesh.position.set(options.x, options.y, options.z);
+
+      mesh.rotation.z = Math.PI * options.rotationZ;
       mesh.rotation.x = Math.PI * options.rotationX;
       mesh.rotation.y = Math.PI * options.rotationY;
-      if (options.rotationZ) {
-        mesh.rotation.z = Math.PI * options.rotationZ;
-      }
 
       if (options.addMesh) {
         this.casementGroup.add(mesh);
@@ -136,7 +141,10 @@ export const listSearch = {
       // 创建OutlinePass通道,显示外轮廓边框
       // this.OutlinePass = new THREE.OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), this.scene, this.camera);
       this.OutlinePass = new THREE.OutlinePass(
-        new THREE.Vector2(threeDom.getBoundingClientRect().width, threeDom.getBoundingClientRect().height),
+        new THREE.Vector2(
+          threeDom.getBoundingClientRect().width,
+          threeDom.getBoundingClientRect().height
+        ),
         that.scene,
         that.camera
       );
@@ -146,7 +154,7 @@ export const listSearch = {
       // 后处理完成，设置renderToScreen为true，后处理结果在Canvas画布上显示
       this.OutlinePass.renderToScreen = true;
       //OutlinePass相关属性设置
-      this.OutlinePass.visibleEdgeColor = new THREE.Color('#f0f');
+      this.OutlinePass.visibleEdgeColor = new THREE.Color("#f0f");
       this.OutlinePass.hiddenEdgeColor = new THREE.Color("#f0f");
       this.OutlinePass.edgeThickness = 1;
       this.OutlinePass.edgeStrength = 5;
@@ -162,8 +170,19 @@ export const listSearch = {
       //   1 / threeDom.getBoundingClientRect().width,
       //   1 / threeDom.getBoundingClientRect().height
       // );
-      console.log(threeDom.getBoundingClientRect().width, threeDom.getBoundingClientRect().height)
+      console.log(
+        threeDom.getBoundingClientRect().width,
+        threeDom.getBoundingClientRect().height
+      );
       // this.composer.addPass(FXAAShaderPass);
+    },
+    setSelectedObjects(intersects) {
+      let mesh = intersects[0].object;
+      this.OutlinePass.selectedObjects = [mesh];
+      this.scene.updateMatrixWorld(true);
+      var worldPosition = new THREE.Vector3();
+      mesh.getWorldPosition(worldPosition);
+      return mesh;
     },
   },
 

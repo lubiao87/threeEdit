@@ -11,9 +11,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
-// import Avue from '@smallwei/avue';
-// import '@smallwei/avue/lib/index.css';
-// Vue.use(Avue);
+import Avue from '@smallwei/avue';
+import '@smallwei/avue/lib/index.css';
+Vue.use(Avue);
 
 //引入fontawesome
 import 'font-awesome/css/font-awesome.min.css'

@@ -1,16 +1,23 @@
 <template>
   <div class="wallPanel">
     <!-- <slot name="header"></slot> -->
-    <!-- <div v-for="(item, index) in data" :key="index" class="item float_L">
-      <img :src="item.url" :alt="item.name" srcset="" class="material" />
-    </div> -->
-     <slot name="header"></slot>
-    <!-- <div class="contentTabAreaNew">
-      <div class="tabItemBig active float_L">地基尺寸</div>
-      <span class="edit float_R" @click="changeWall">修改</span>
-    </div> -->
-    <div v-for="(item, index) in data" :key="index" class="item float_L">
-      <img :src="item.url" :alt="item.name" srcset="" class="material" @click="changeWall(item, index)" :class="{active: activeIndex === index}"/>
+    <slot name="header"></slot>
+    <div
+      v-for="(item, index) in data"
+      :key="index"
+      class="item float_L"
+      @click="changeWall(item, index)"
+    >
+      <img
+        :src="item.url"
+        :alt="item.name"
+        srcset=""
+        class="material"
+        :class="{ active: activeIndex === index }"
+      />
+      <div class="stip">
+        {{ item.name }}
+      </div>
     </div>
     <dialogp :id="layerId" @queryDialog="queryDialog">
       <div class="item changeSizeArea">
@@ -57,20 +64,20 @@ export default {
         w: 10,
       },
       activeIndex: -1,
-      data:[
-            {
-              name: "基础墙体",
-              url: "img/wall/wall.png",
-              size: [1, 1],
-              parentName: "wall",
-            },
-            {
-              name: "透明墙体",
-              url: "img/wall/wall2.png",
-              size: [1, 1],
-              parentName: "wall",
-            },
-          ]
+      data: [
+        {
+          name: "基础墙体",
+          url: "img/wall/wall.png",
+          size: [1, 1],
+          parentName: "wall",
+        },
+        {
+          name: "透明墙体",
+          url: "img/wall/wall2.png",
+          size: [1, 1],
+          parentName: "wall",
+        },
+      ],
     };
   },
   created() {
@@ -84,7 +91,7 @@ export default {
       };
       this.$emit("getChildData", this.parendData);
     },
-    wallClose(){
+    wallClose() {
       this.parendData = {
         name: "闭合墙轮廓",
         parentName: "wall",
@@ -96,7 +103,7 @@ export default {
       this.parendData = {
         name: "修改墙轮廓",
         parentName: "wall",
-        data: data
+        data: data,
       };
       this.$emit("getChildData", this.parendData);
       this.Set_DialogVisible(true);
@@ -119,7 +126,7 @@ export default {
         parentName: "wall",
       };
       this.$emit("getChildData", this.parendData);
-    }
+    },
   },
   watch: {
     threePoints(val) {
@@ -158,6 +165,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/assets/theme/option.scss";
+@import "@/assets/theme/leftPanel.scss";
 .wallPanel {
   height: 100%;
   overflow: hidden;
@@ -184,20 +193,6 @@ export default {
       margin-right: 25px;
       cursor: pointer;
     }
-  }
-  .item {
-    // display: -webkit-box;
-    // display: -ms-flexbox;
-    // display: flex;
-    // -ms-flex-pack: justify;
-    // -webkit-box-orient: vertical;
-    // -webkit-box-direction: normal;
-    // -ms-flex-direction: column;
-    // flex-direction: column;
-    // padding-left: 10px;
-    width: 33%;
-    padding-left: 10px;
-    padding-top: 10px;
   }
   .item.changeSizeArea {
     -webkit-box-orient: horizontal;
@@ -237,31 +232,6 @@ export default {
         margin-left: 6px;
       }
     }
-  }
-
-  // .item {
-  //   width: 88px;
-  //   height: 100px;
-  //   padding: 10px 8px 10px 5px;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   img {
-  //     border: 1px solid #ccc;
-  //     cursor: pointer;
-  //   }
-  //   img:hover {
-  //     -webkit-box-shadow: 0 2px 6px 1px #c6cad1;
-  //     box-shadow: 0 2px 6px 1px #c6cad1;
-  //   }
-  // }
-  .material {
-    width: 100%;
-        
-  }
-  .material.active {
-    -webkit-box-shadow: 0 2px 6px 2px #c6cad1;
-      box-shadow: 0 2px 6px 2px #c6cad1;
   }
 }
 </style>

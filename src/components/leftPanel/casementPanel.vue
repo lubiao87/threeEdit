@@ -1,54 +1,29 @@
 <template>
   <div class="casementPanel">
     <slot name="header"></slot>
-    <div class="contentTabAreaNew">
-      <div class="tabItemBig active float_L">窗口参数</div>
-      <span class="edit float_R" @click="changeWall">修改</span>
-    </div>
-    <div class="item changeSizeArea">
-      <div class="tabItemBig active float_L">尺寸：</div>
-      <div class="changeSizeBtn">
-        <span>{{ casementSize.h }} m</span><span class="desc">长</span>
-      </div>
-      <div class="changeSizeBtn">
-        <span>{{ casementSize.w }} m</span><span class="desc">宽</span>
-      </div>
-      <div class="changeSizeBtn">
-        <span>{{ casementSize.l }} m</span><span class="desc">高</span>
-      </div>
-    </div>
 
-    <div class="item changeSizeArea">
-      <div class="tabItemBig active float_L">位置：</div>
-      <div class="changeSizeBtn">
-        <span>{{ casementPositon.x }} m</span><span class="desc">X</span>
-      </div>
-      <div class="changeSizeBtn">
-        <span>{{ casementPositon.y }} m</span><span class="desc">Y</span>
-      </div>
-      <div class="changeSizeBtn">
-        <span>{{ casementPositon.z }} m</span><span class="desc">Z</span>
-      </div>
-    </div>
-    <div class="item changeSizeArea">
-      <div class="tabItemBig active float_L">角度：</div>
-      <div class="changeSizeBtn">
-        <span>{{ casementAngle.x }} °</span><span class="desc">X</span>
-      </div>
-      <div class="changeSizeBtn">
-        <span>{{ casementAngle.y }} °</span><span class="desc">Y</span>
-      </div>
-      <div class="changeSizeBtn">
-        <span>{{ casementAngle.z }} °</span><span class="desc">Z</span>
+    <div
+      v-for="(item, index) in data"
+      :key="index"
+      class="item float_L"
+      @click="changeWall(item, index)"
+    >
+      <img
+        :src="item.url"
+        :alt="item.name"
+        srcset=""
+        class="material"
+        :class="{ active: activeIndex === index }"
+      />
+      <div class="stip">
+        {{ item.name }}
       </div>
     </div>
 
     <dialogp :id="layerId" @queryDialog="queryDialog">
       <el-collapse v-model="activeNames" @change="handleChange" accordion>
         <el-collapse-item title="窗口参数" name="窗口参数">
-          <div>
-
-          </div>
+          <div></div>
           <el-select v-model="GeometryType" placeholder="请选择">
             <el-option
               v-for="item in GeometryOptions"
@@ -58,19 +33,60 @@
             >
             </el-option>
           </el-select>
-          <div class="item changeSizeArea" v-if="GeometryType === '长方体'">
-            <div class="changeSizeBtn">
-              <span>{{ casementSize.h }} m</span><span class="desc">长</span>
+          <div class="changeSizeArea" v-if="GeometryType === '长方体'">
+            <div class="option-list">长</div>
+            <div class="option-list">宽</div>
+            <div class="option-list">高</div>
+            <div class="option-list">
+              <avue-input-number v-model="casementSizeH"></avue-input-number>
             </div>
-            <div class="changeSizeBtn">
-              <span>{{ casementSize.w }} m</span><span class="desc">宽</span>
+            <div class="option-list">
+              <avue-input-number v-model="casementSizeW"></avue-input-number>
             </div>
-            <div class="changeSizeBtn">
-              <span>{{ casementSize.l }} m</span><span class="desc">高</span>
+            <div class="option-list">
+              <avue-input-number v-model="casementSizeL"></avue-input-number>
             </div>
-            
           </div>
-          <el-button type="primary" @click="addCasement">增加</el-button>
+
+          <el-row>
+            <div class="option-list">x坐标</div>
+            <div class="option-list">y坐标</div>
+            <div class="option-list">z坐标</div>
+            <div class="option-list">
+              <avue-input-number v-model="casementPositonX"></avue-input-number>
+            </div>
+            <div class="option-list">
+              <avue-input-number v-model="casementPositonY"></avue-input-number>
+            </div>
+            <div class="option-list">
+              <avue-input-number v-model="casementPositonZ"></avue-input-number>
+            </div>
+
+            <div class="option-list">x角度</div>
+            <div class="option-list">y角度</div>
+            <div class="option-list">z角度</div>
+            <div class="option-list">
+              <avue-input-number v-model="casementAngleX"></avue-input-number>
+            </div>
+            <div class="option-list">
+              <avue-input-number v-model="casementAngleY"></avue-input-number>
+            </div>
+            <div class="option-list">
+              <avue-input-number v-model="casementAngleZ"></avue-input-number>
+            </div>
+          </el-row>
+
+          <el-row>
+            <div>颜色</div>
+            <avue-input-color placeholder="请选择颜色" v-model="casementColor"></avue-input-color>
+          </el-row>
+
+          <el-row class="btn-list">
+            <el-button size="small" @click="addCasement">增加</el-button>
+            <el-button size="small" @click="modifyCasement">修改</el-button>
+            <el-button size="small">删除</el-button>
+          </el-row>
+
         </el-collapse-item>
         <el-collapse-item title="挖槽" name="挖槽">
           <div class="hh">
@@ -102,21 +118,16 @@ export default {
       drawIng: false,
       layerOpen: null,
       parendData: {},
-      casementSize: {
-        h: 2,
-        w: 0.2,
-        l: 1.5,
-      },
-      casementPositon: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
-      casementAngle: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
+      casementSizeH: 1,
+      casementSizeW: 1,
+      casementSizeL: 1,
+      casementPositonX: 0,
+      casementPositonY: 0,
+      casementPositonZ: 0,
+      casementAngleX: 0,
+      casementAngleY: 0,
+      casementAngleZ: 0,
+      casementColor: "rgba(32, 76, 159, 0.6)",
       activeNames: ["窗口参数"],
       GeometryType: "长方体",
       GeometryOptions: [
@@ -137,6 +148,15 @@ export default {
           label: "球体",
         },
       ],
+      data: [
+        {
+          name: "自定义",
+          url: "img/casement/casement.png",
+          size: [1, 1],
+          parentName: "floor",
+        },
+      ],
+      activeIndex: -1,
     };
   },
   created() {
@@ -146,9 +166,10 @@ export default {
     handleChange(val) {
       console.log(val);
     },
-    changeWall() {
+    changeWall(data, i) {
+      this.activeIndex = i;
       this.parendData = {
-        name: "修改窗户",
+        name: "显示窗户信息",
         parentName: "casement",
       };
       this.$emit("getChildData", this.parendData);
@@ -170,27 +191,40 @@ export default {
     },
     addCasement() {
       this.parendData = {
-        name: "增加窗口",
+        name: "增加窗户",
         parentName: "casement",
-        data: {
-          casementSize: this.casementSize,
-          casementPositon: this.casementPositon,
-          casementAngle: this.casementAngle,
-        },
+
+        data: this.setData(),
       };
       this.$emit("getChildData", this.parendData);
     },
-    modifyCasement() {
+    modifyCasement(type) {
       this.parendData = {
-        name: "修改窗口",
+        name: "修改窗户",
         parentName: "casement",
-        data: {
-          casementSize: this.casementSize,
-          casementPositon: this.casementPositon,
-          casementAngle: this.casementAngle,
-        },
       };
       this.$emit("getChildData", this.parendData);
+    },
+    setData() {
+      let data = {
+        casementSize: {
+          h: this.casementSizeH,
+          w: this.casementSizeW,
+          l: this.casementSizeL,
+        },
+        casementPositon: {
+          x: this.casementPositonX,
+          y: this.casementPositonY,
+          z: this.casementPositonZ,
+        },
+        casementAngle: {
+          x: this.casementAngleX,
+          y: this.casementAngleY,
+          Z: this.casementAngleZ,
+        },
+        casementColor: this.casementColor
+      };
+      return data;
     },
   },
 };
@@ -198,6 +232,8 @@ export default {
 
 <style lang="scss">
 @import "@/assets/theme/option.scss";
+@import "@/assets/theme/leftPanel.scss";
+
 .casementPanel {
   height: 100%;
   overflow: hidden;
@@ -206,7 +242,7 @@ export default {
   right: 0;
   width: 280px;
   .el-select {
-    width: 100%;
+    width: 90%;
   }
   input[type="text"] {
     background-color: $bodyBgColor;
@@ -234,59 +270,51 @@ export default {
       cursor: pointer;
     }
   }
-  .item {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-pack: justify;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    padding-left: 10px;
+  .changeSizeArea {
+    margin-top: 10px;
+    overflow: hidden;
   }
-  .item.changeSizeArea {
-    -webkit-box-orient: horizontal;
-    -webkit-box-direction: normal;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    .changeSizeBtn {
-      margin-right: 10px;
-      -webkit-box-flex: 1;
-      -ms-flex: 1;
-      flex: 1;
-      height: 36px;
-      // border: 1px solid #dadfe4;
-      border-radius: 2px;
-      font-size: 14px;
-      //   padding-left: 13px;
-      //   padding-right: 12px;
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: flex;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-      align-items: center;
-      -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-      justify-content: center;
-      cursor: pointer;
-      .desc {
-        color: #999;
-        font-size: 12px;
-        margin-left: 6px;
-      }
+  .btn-list {
+    margin-top: 10px;
+    .el-button + .el-button {
+      margin-left: 4px;
     }
   }
   .hh {
     text-align: left;
     padding: 10px;
+  }
+  .option-list {
+    position: relative;
+    width: 33.3%;
+    float: left;
+    padding-left: 4px;
+    .name {
+      position: absolute;
+      left: 8px;
+      top: 3px;
+      z-index: 1;
+    }
+    .el-input-number {
+      width: 100%;
+      line-height: 30px;
+    }
+    .el-input__inner {
+      height: 30px;
+      line-height: 30px;
+    }
+    .el-input-number.is-controls-right .el-input-number__decrease,
+    .el-input-number.is-controls-right .el-input-number__increase {
+      line-height: 15px;
+    }
+    .el-input-number.is-controls-right .el-input__inner {
+      padding-left: 6px;
+      padding-right: 24px;
+    }
+    .el-input-number__decrease,
+    .el-input-number__increase {
+      width: 28px;
+    }
   }
 }
 </style>

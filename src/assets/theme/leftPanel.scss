@@ -1,0 +1,41 @@
+.item {
+  width: 33%;
+  padding-left: 10px;
+  padding-top: 10px;
+  position: relative;
+  img {
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  img:hover {
+    -webkit-box-shadow: 0 2px 6px 1px #c6cad1;
+    box-shadow: 0 2px 6px 1px #c6cad1;
+  }
+  .material {
+    width: 100%;
+  }
+  .material.active {
+    -webkit-box-shadow: 0 2px 6px 2px #c6cad1;
+    box-shadow: 0 2px 6px 2px #c6cad1;
+  }
+  .stip {
+    width: calc(100% - 10px);
+    background-color: #fff;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    text-align: center;
+    height: calc(100% - 10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $lessTextColor;
+    margin-left: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  .stip:hover {
+    opacity: 0.8;
+  }
+}

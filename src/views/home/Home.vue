@@ -155,7 +155,7 @@ export default {
       } else {
         this.pointsIndex = 0;
       }
-       this.composer.render();
+      this.composer.render();
       requestAnimationFrame(this.animate);
 
       // this.renderer.render(this.scene, this.camera);
@@ -179,20 +179,14 @@ export default {
       // 选择墙壁
       this.setIntersects(event, this.WallGroup.children, (intersects) => {
         if (intersects.length > 0) {
-
-
-          let mesh = intersects[0].object;
-           this.OutlinePass.selectedObjects = [mesh];
-          this.scene.updateMatrixWorld(true);
-          var worldPosition = new THREE.Vector3();
-          mesh.getWorldPosition(worldPosition)
-          console.log(mesh,this.OutlinePass);
-          // let threeDom = document.getElementById("cesiumContainer");
-          // threeDom.removeEventListener(
-          //   "mousemove",
-          //   this.mousemoveSelectWall,
-          //   false
-          // );
+          this.setSelectedObjects(intersects);
+          let threeDom = document.getElementById("cesiumContainer");
+          threeDom.removeEventListener(
+            "mousemove",
+            this.mousemoveSelectWall,
+            false
+          );
+          this.cursorName = "auto";
         }
         // console.log(layerOpen)
       });
@@ -201,25 +195,40 @@ export default {
       // 选择墙壁
       this.setIntersects(event, this.WallGroup.children, (intersects) => {
         if (intersects.length > 0) {
-
           this.cursorName = "pointer";
-          let mesh = intersects[0].object;
-          this.scene.remove(this.border);
-          this.border = new THREE.BoxHelper(mesh, "#5b78e7"); //设置边框，这个边框不会旋转
-          this.scene.add(this.border); //网格模型添加到场景中
-
+          this.setSelectedObjects(intersects);
         } else {
           this.cursorName = "auto";
-          if (this.border) {
-            this.scene.remove(this.border);
-            this.border = null;
-          }
-
-          // this.OutlinePass.selectedObjects = [];
         }
       });
     },
-
+    clickSelectCasement(event) {
+      // 点击选择窗户
+      this.setIntersects(event, this.casementGroup.children, (intersects) => {
+        if (intersects.length > 0) {
+          this.setSelectedObjects(intersects);
+          let threeDom = document.getElementById("cesiumContainer");
+          threeDom.removeEventListener(
+            "mousemove",
+            this.mousemoveSelectCasement,
+            false
+          );
+          this.cursorName = "auto";
+        }
+        // console.log(layerOpen)
+      });
+    },
+    mousemoveSelectCasement(event) {
+      // 悬停窗户
+      this.setIntersects(event, this.casementGroup.children, (intersects) => {
+        if (intersects.length > 0) {
+          this.cursorName = "pointer";
+          this.setSelectedObjects(intersects);
+        } else {
+          this.cursorName = "auto";
+        }
+      });
+    },
     getChildData(data) {
       // console.log("获取chidren数据", data);
       if (data.parentName) {
@@ -240,11 +249,15 @@ export default {
               this.newWallMesh(this.pointList[0]);
               this.pointList.push(this.pointList[0]);
               let threeDom3 = document.getElementById("cesiumContainer");
-              threeDom3.removeEventListener("click", this.addSpritePoint, false);
+              threeDom3.removeEventListener(
+                "click",
+                this.addSpritePoint,
+                false
+              );
             } else {
-              this.$message.error('您还没有绘画墙轮廓呢');
+              this.$message.error("您还没有绘画墙轮廓呢");
             }
-            
+
             break;
           case "确定墙轮廓":
             console.log("确定墙轮廓");
@@ -261,17 +274,48 @@ export default {
             console.log("选择地板", data);
             this.newFloorTexture(data);
             break;
-          case "增加窗口":
-            console.log("增加窗口", data);
+          case "增加窗户":
+            console.log("增加窗户", data);
             let option = {
               width: data.data.casementSize.w,
               height: data.data.casementSize.h,
               depth: data.data.casementSize.l,
               addMesh: true,
-              y: data.data.casementSize.l / 2,
+              // y: data.data.casementSize.l / 2 + data.data.casementPositon.y,
+              y: data.data.casementPositon.y,
+              x: data.data.casementPositon.x,
+              z: data.data.casementPositon.z,
+              color: data.data.casementColor,
             };
             console.log("option", option);
-            this.casementMeth = this.paintGlass(option);
+            this.paintGlass(option);
+            break;
+          case "显示窗户信息":
+            console.log("显示窗户信息", data);
+            this.cursorName = "auto";
+            break;
+          case "修改窗户":
+            console.log("修改窗户", data);
+            this.casementMeth = null;
+            if (!this.controls) {
+              this.controls = new THREE.OrbitControls(this.camera);
+            }
+            let threeDom5 = document.getElementById("cesiumContainer");
+            threeDom5.removeEventListener(
+              "click",
+              this.clickSelectCasement,
+              false
+            );
+            threeDom5.addEventListener(
+              "click",
+              this.clickSelectCasement,
+              false
+            );
+            threeDom5.addEventListener(
+              "mousemove",
+              this.mousemoveSelectCasement,
+              false
+            );
             break;
           case "确定窗户":
             console.log("确定窗户", data);
@@ -279,6 +323,7 @@ export default {
             if (!this.controls) {
               this.controls = new THREE.OrbitControls(this.camera);
             }
+
             break;
           case "挖槽破窗":
             console.log("挖槽破窗", data);
@@ -332,7 +377,7 @@ export default {
         side: THREE.DoubleSide, //两面可见
       }); //材质对象
       let wallMesh = new THREE.Mesh(geometry, material); //网格模型对象
-      wallMesh.name = '墙壁' + this.pointList.length
+      wallMesh.name = "墙壁" + this.pointList.length;
       this.WallGroup.add(wallMesh);
     },
     newFloorTexture(data) {
@@ -342,8 +387,8 @@ export default {
       }
       // 通过顶点定义轮廓
       let points = [];
-      if(this.threePoints.length < 3) {
-        this.$message.error('您还没有绘画墙轮廓呢');
+      if (this.threePoints.length < 3) {
+        this.$message.error("您还没有绘画墙轮廓呢");
         return;
       }
       this.threePoints.forEach((item) => {

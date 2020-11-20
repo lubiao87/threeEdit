@@ -57,38 +57,14 @@ export default {
           name: "wall",
           componentName: "wallPanel",
           header: "可拖拽模型到此面板增加素材",
-          data:{
-            drawSize:{
-              h: 6,
-              w: 10
-            }
-          }
+          
         },
         {
           title: "地板",
           name: "floor",
           componentName: "floorPanel",
           header: "可拖拽图片到此面板增加素材",
-          data: [
-            {
-              name: "1x1太阳能板",
-              url: "img/floor/t1.png",
-              size: [1, 1],
-              parentName: "floor",
-            },
-            {
-              name: "1x1红点瓷板",
-              url: "img/floor/t2.png",
-              size: [1, 1],
-              parentName: "floor",
-            },
-            {
-              name: "1x1黑白格",
-              url: "img/floor/t3.jpg",
-              size: [1, 1],
-              parentName: "floor",
-            },
-          ],
+          
         },
         {
           title: "窗户",

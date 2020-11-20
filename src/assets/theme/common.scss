@@ -268,55 +268,6 @@ input[type="password"] {
   text-align: left;
   color: rgba(255, 255, 255, 1);
 }
-.el-table th, .el-table tr, .el-table, .el-table__expanded-cell {
-  background-color: transparent !important;
-}
-body .el-checkbox__inner::after {
-  border-color:$smainColor;
-}
-body .el-button {
-  padding: 10px 15px;
-}
-.cesium-viewer-toolbar {
-  display: block;
-  bottom: 5px;
-  top: initial !important;
-}
-
-body .avue-group__item {
-  background-color: $bodyBgColor;
-}
-
-body .createPlanet input[type=text] {
-  background-color: #2c2c2c;
-    border-color: #525252 !important;
-    color: $writeColor !important;
-}
-body .el-switch__core {
-  border-color: rgb(44, 44, 44);
-    background-color: rgb(44, 44, 44);
-}
-
-body .avue-group__header {
-  border-color: #4b4b4b #000 #000 #4b4b4b;
-}
-body .avue-group__title {
-  color: #bacde5;
-}
-body .el-textarea.is-disabled .el-textarea__inner {
-  background-color: #2c2c2c;
-    border-color: #525252 ;
-    color: $writeColor ;
-}
-body  .el-switch__label * {
-  color: $writeColor ;
-}
-body .el-form-item__label {
-  color: $writeColor ;
-}
-body .el-tooltip__popper.is-light {
-  color: red;
-}
 
 /* * layui-layer * */
 body .layui-layer-title {

@@ -18,6 +18,8 @@
 </template>
 
 <script>
+// import { Message } from 'element-ui';
+
 import { ChangeSlowly } from "@/map/vrSphereAnimat";
 import progressPage from "@/components/progress/progressPage";
 import hearder from "@/components/hearder/hearder";
@@ -175,7 +177,7 @@ export default {
     },
     clickSelectWall(event) {
       // 选择墙壁
-      this.setIntersects(event, this.casementGroup.children, (intersects) => {
+      this.setIntersects(event, this.WallGroup.children, (intersects) => {
         if (intersects.length > 0) {
 
 
@@ -197,7 +199,7 @@ export default {
     },
     mousemoveSelectWall(event) {
       // 选择墙壁
-      this.setIntersects(event, this.casementGroup.children, (intersects) => {
+      this.setIntersects(event, this.WallGroup.children, (intersects) => {
         if (intersects.length > 0) {
 
           this.cursorName = "pointer";
@@ -234,10 +236,15 @@ export default {
           case "闭合墙轮廓":
             console.log("闭合");
             this.cursorName = "auto";
-            this.newWallMesh(this.pointList[0]);
-            this.pointList.push(this.pointList[0]);
-            let threeDom3 = document.getElementById("cesiumContainer");
-            threeDom3.removeEventListener("click", this.addSpritePoint, false);
+            if (this.pointList.length > 1) {
+              this.newWallMesh(this.pointList[0]);
+              this.pointList.push(this.pointList[0]);
+              let threeDom3 = document.getElementById("cesiumContainer");
+              threeDom3.removeEventListener("click", this.addSpritePoint, false);
+            } else {
+              this.$message.error('您还没有绘画墙轮廓呢');
+            }
+            
             break;
           case "确定墙轮廓":
             console.log("确定墙轮廓");
@@ -335,6 +342,10 @@ export default {
       }
       // 通过顶点定义轮廓
       let points = [];
+      if(this.threePoints.length < 3) {
+        this.$message.error('您还没有绘画墙轮廓呢');
+        return;
+      }
       this.threePoints.forEach((item) => {
         points.push(new THREE.Vector3(item.x, item.z, 1));
       });

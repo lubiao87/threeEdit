@@ -9,15 +9,35 @@
 
 <script>
 export default {
-  props: {
-    data: {
-      type: Array,
-      default: [], //默认值
-    },
-  },
+  // props: {
+  //   data: {
+  //     type: Array,
+  //     default: [], //默认值
+  //   },
+  // },
   data: () => {
     return {
-      activeIndex: -1
+      activeIndex: -1,
+      data: [
+            {
+              name: "1x1太阳能板",
+              url: "img/floor/t1.png",
+              size: [1, 1],
+              parentName: "floor",
+            },
+            {
+              name: "1x1红点瓷板",
+              url: "img/floor/t2.png",
+              size: [1, 1],
+              parentName: "floor",
+            },
+            {
+              name: "1x1黑白格",
+              url: "img/floor/t3.jpg",
+              size: [1, 1],
+              parentName: "floor",
+            },
+          ],
     }
   },
   created() {

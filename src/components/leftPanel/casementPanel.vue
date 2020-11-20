@@ -2,10 +2,11 @@
   <div class="casementPanel">
     <slot name="header"></slot>
     <div class="contentTabAreaNew">
-      <div class="tabItemBig active float_L">窗口尺寸</div>
+      <div class="tabItemBig active float_L">窗口参数</div>
       <span class="edit float_R" @click="changeWall">修改</span>
     </div>
     <div class="item changeSizeArea">
+      <div class="tabItemBig active float_L">尺寸：</div>
       <div class="changeSizeBtn">
         <span>{{ casementSize.h }} m</span><span class="desc">长</span>
       </div>
@@ -16,11 +17,9 @@
         <span>{{ casementSize.l }} m</span><span class="desc">高</span>
       </div>
     </div>
-    <div class="contentTabAreaNew">
-      <div class="tabItemBig active float_L">窗口位置</div>
-      <span class="edit float_R" @click="changeWall">修改</span>
-    </div>
+
     <div class="item changeSizeArea">
+      <div class="tabItemBig active float_L">位置：</div>
       <div class="changeSizeBtn">
         <span>{{ casementPositon.x }} m</span><span class="desc">X</span>
       </div>
@@ -31,11 +30,8 @@
         <span>{{ casementPositon.z }} m</span><span class="desc">Z</span>
       </div>
     </div>
-    <div class="contentTabAreaNew">
-      <div class="tabItemBig active float_L">窗口角度</div>
-      <span class="edit float_R" @click="changeWall">修改</span>
-    </div>
     <div class="item changeSizeArea">
+      <div class="tabItemBig active float_L">角度：</div>
       <div class="changeSizeBtn">
         <span>{{ casementAngle.x }} °</span><span class="desc">X</span>
       </div>
@@ -48,34 +44,42 @@
     </div>
 
     <dialogp :id="layerId" @queryDialog="queryDialog">
-      <div style="width: 100%;height: 40px;">
-        <div class="float_L">长方体</div>
-        <div class="float_L">圆柱体</div>
-        <div class="float_L">三角体</div>
-      </div>
+      <el-collapse v-model="activeNames" @change="handleChange" accordion>
+        <el-collapse-item title="窗口参数" name="窗口参数">
+          <div>
 
-      <div class="item changeSizeArea">
-        <div class="changeSizeBtn">
-          <span>{{ casementSize.h }} m</span><span class="desc">长</span>
-        </div>
-        <div class="changeSizeBtn">
-          <span>{{ casementSize.w }} m</span><span class="desc">宽</span>
-        </div>
-        <div class="changeSizeBtn">
-          <span>{{ casementSize.l }} m</span><span class="desc">高</span>
-        </div>
-      </div>
-      <el-button @click="addCasement">增加</el-button>
-      <el-button type="primary" @click="hollowingOut">挖槽</el-button>
-      <el-button type="primary" @click="modifyCasement">修改</el-button>
-      <div  class="hh">
-          <div>
-            目标： <span></span>
           </div>
-          <div>
-            槽具： <span></span>
+          <el-select v-model="GeometryType" placeholder="请选择">
+            <el-option
+              v-for="item in GeometryOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+          <div class="item changeSizeArea" v-if="GeometryType === '长方体'">
+            <div class="changeSizeBtn">
+              <span>{{ casementSize.h }} m</span><span class="desc">长</span>
+            </div>
+            <div class="changeSizeBtn">
+              <span>{{ casementSize.w }} m</span><span class="desc">宽</span>
+            </div>
+            <div class="changeSizeBtn">
+              <span>{{ casementSize.l }} m</span><span class="desc">高</span>
+            </div>
+            
           </div>
-      </div>
+          <el-button type="primary" @click="addCasement">增加</el-button>
+        </el-collapse-item>
+        <el-collapse-item title="挖槽" name="挖槽">
+          <div class="hh">
+            <div>目标： <span></span></div>
+            <div>槽具： <span></span></div>
+            <el-button type="primary" @click="hollowingOut">确定</el-button>
+          </div>
+        </el-collapse-item>
+      </el-collapse>
     </dialogp>
   </div>
 </template>
@@ -106,19 +110,42 @@ export default {
       casementPositon: {
         x: 0,
         y: 0,
-        z: 0
+        z: 0,
       },
       casementAngle: {
         x: 0,
         y: 0,
-        z: 0
-      }
+        z: 0,
+      },
+      activeNames: ["窗口参数"],
+      GeometryType: "长方体",
+      GeometryOptions: [
+        {
+          value: "长方体",
+          label: "长方体",
+        },
+        {
+          value: "圆柱体",
+          label: "圆柱体",
+        },
+        {
+          value: "三角体",
+          label: "三角体",
+        },
+        {
+          value: "球体",
+          label: "球体",
+        },
+      ],
     };
   },
   created() {
     console.log("this.data", this.data);
   },
   methods: {
+    handleChange(val) {
+      console.log(val);
+    },
     changeWall() {
       this.parendData = {
         name: "修改窗户",
@@ -149,11 +176,11 @@ export default {
           casementSize: this.casementSize,
           casementPositon: this.casementPositon,
           casementAngle: this.casementAngle,
-        }
+        },
       };
       this.$emit("getChildData", this.parendData);
     },
-    modifyCasement(){
+    modifyCasement() {
       this.parendData = {
         name: "修改窗口",
         parentName: "casement",
@@ -161,15 +188,16 @@ export default {
           casementSize: this.casementSize,
           casementPositon: this.casementPositon,
           casementAngle: this.casementAngle,
-        }
+        },
       };
       this.$emit("getChildData", this.parendData);
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
+@import "@/assets/theme/option.scss";
 .casementPanel {
   height: 100%;
   overflow: hidden;
@@ -177,6 +205,15 @@ export default {
   top: 0;
   right: 0;
   width: 280px;
+  .el-select {
+    width: 100%;
+  }
+  input[type="text"] {
+    background-color: $bodyBgColor;
+    border-color: $borderColor;
+    color: $lessTextColor;
+    text-align: center;
+  }
   .contentTabAreaNew {
     width: 100%;
     height: 50px;
@@ -225,7 +262,7 @@ export default {
       -ms-flex: 1;
       flex: 1;
       height: 36px;
-      border: 1px solid #dadfe4;
+      // border: 1px solid #dadfe4;
       border-radius: 2px;
       font-size: 14px;
       //   padding-left: 13px;

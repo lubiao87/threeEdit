@@ -147,7 +147,7 @@ export const listSearch = {
       this.OutlinePass.renderToScreen = true;
       //OutlinePass相关属性设置
       this.OutlinePass.visibleEdgeColor = new THREE.Color('#f0f');
-      this.OutlinePass.hiddenEdgeColor = new THREE.Color("#00f");
+      this.OutlinePass.hiddenEdgeColor = new THREE.Color("#f0f");
       this.OutlinePass.edgeThickness = 1;
       this.OutlinePass.edgeStrength = 5;
       // 创建后处理对象EffectComposer，WebGL渲染器作为参数

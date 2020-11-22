@@ -35,7 +35,7 @@ export default {
     hearder,
     leftPanel,
   },
-  data: function(params) {
+  data: function (params) {
     return {
       photosphereShow: "none",
       camera: null,
@@ -77,7 +77,10 @@ export default {
       this.camera.position = new THREE.Vector3(10, 60, 20);
       // this.camera.lookAt(new THREE.Vector3(0, 0, 0));
       this.camera.updateProjectionMatrix();
-      this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
+      this.controls = new THREE.OrbitControls(
+        this.camera,
+        document.getElementById("cesiumContainer")
+      );
       // this.controls.target.set(0, 0, 0);
       // this.controls.update();
 
@@ -179,7 +182,11 @@ export default {
       // 选择墙壁
       this.setIntersects(event, this.WallGroup.children, (intersects) => {
         if (intersects.length > 0) {
-          this.setSelectedObjects(intersects);
+          this.wallMesh = this.setSelectedObjects(intersects);
+          this.Set_TagetName(this.wallMesh.name);
+          // console.log(this.wallMesh.material.color.getStyle());
+          let color = this.wallMesh.material.color.getStyle();
+          this.Set_TagetColor(color);
           let threeDom = document.getElementById("cesiumContainer");
           threeDom.removeEventListener(
             "mousemove",
@@ -202,15 +209,20 @@ export default {
         }
       });
     },
-    clickSelectCasement(event) {
+    clickSelectCasementGrrove(event) {
       // 点击选择窗户
       this.setIntersects(event, this.casementGroup.children, (intersects) => {
         if (intersects.length > 0) {
-          this.setSelectedObjects(intersects);
+          this.casementMeth = this.setSelectedObjectsAdd(intersects, true);
+          this.Set_SetGrroveTool(this.casementMeth.name);
+          this.Set_SelectCasementMeth(this.casementMeth);
+
+          let color = this.casementMeth.material.color.getStyle();
+          this.Set_GrroveColor(color);
           let threeDom = document.getElementById("cesiumContainer");
           threeDom.removeEventListener(
             "mousemove",
-            this.mousemoveSelectCasement,
+            this.mousemoveSelectCasementGrrove,
             false
           );
           this.cursorName = "auto";
@@ -218,12 +230,13 @@ export default {
         // console.log(layerOpen)
       });
     },
-    mousemoveSelectCasement(event) {
+    mousemoveSelectCasementGrrove(event) {
       // 悬停窗户
       this.setIntersects(event, this.casementGroup.children, (intersects) => {
         if (intersects.length > 0) {
           this.cursorName = "pointer";
-          this.setSelectedObjects(intersects);
+
+          this.setSelectedObjectsAdd(intersects, true);
         } else {
           this.cursorName = "auto";
         }
@@ -263,7 +276,10 @@ export default {
             console.log("确定墙轮廓");
             this.cursorName = "auto";
             if (!this.controls) {
-              this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
+              this.controls = new THREE.OrbitControls(
+                this.camera,
+                document.getElementById("cesiumContainer")
+              );
             }
             this.Three_Points(this.pointList);
             // this.pointList = [];
@@ -274,7 +290,10 @@ export default {
             console.log("取消墙轮廓");
             this.cursorName = "auto";
             if (!this.controls) {
-              this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
+              this.controls = new THREE.OrbitControls(
+                this.camera,
+                document.getElementById("cesiumContainer")
+              );
             }
             let threeDom2 = document.getElementById("cesiumContainer");
             threeDom2.removeEventListener("click", this.addSpritePoint, false);
@@ -298,10 +317,18 @@ export default {
               rotationY: data.data.casementAngle.y,
               rotationZ: data.data.casementAngle.z,
               color: data.data.casementColor,
-              name: data.data.casementName
+              name: data.data.casementName,
             };
-            console.log("option", option);
+            // console.log("option", option);
             this.paintGlass(option);
+            if (!this.controls) {
+              this.controls = new THREE.OrbitControls(
+                this.camera,
+                document.getElementById("cesiumContainer")
+              );
+            }
+            this.addEventSelectCasementGrrove();
+            this.cursorName = "auto";
             break;
           case "显示窗户信息":
             console.log("显示窗户信息", data);
@@ -311,35 +338,38 @@ export default {
             console.log("修改窗户", data);
             this.casementMeth = null;
             if (!this.controls) {
-              this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
+              this.controls = new THREE.OrbitControls(
+                this.camera,
+                document.getElementById("cesiumContainer")
+              );
             }
-            let threeDom5 = document.getElementById("cesiumContainer");
-            threeDom5.removeEventListener(
-              "click",
-              this.clickSelectCasement,
-              false
-            );
-            threeDom5.addEventListener(
-              "click",
-              this.clickSelectCasement,
-              false
-            );
-            threeDom5.addEventListener(
-              "mousemove",
-              this.mousemoveSelectCasement,
-              false
-            );
+            this.addEventSelectCasementGrrove();
             break;
           case "确定窗户":
             console.log("确定窗户", data);
             this.cursorName = "auto";
             if (!this.controls) {
-              this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
+              this.controls = new THREE.OrbitControls(
+                this.camera,
+                document.getElementById("cesiumContainer")
+              );
             }
 
             break;
           case "挖槽破窗":
             console.log("挖槽破窗", data);
+            this.WallGroup.remove(this.wallMesh);
+            let name = this.wallMesh.name;
+            this.wallMesh = this.createResultMesh(
+              this.wallMesh,
+              this.casementMeth,
+              false
+            );
+            this.wallMesh.name = name;
+            this.WallGroup.add(this.wallMesh);
+            break;
+          case "目标墙体":
+            console.log("目标墙体", data);
             let threeDom4 = document.getElementById("cesiumContainer");
             threeDom4.removeEventListener("click", this.clickSelectWall, false);
             threeDom4.addEventListener("click", this.clickSelectWall, false);
@@ -350,14 +380,51 @@ export default {
             );
             this.cursorName = "auto";
             if (!this.controls) {
-              this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
+              this.controls = new THREE.OrbitControls(
+                this.camera,
+                document.getElementById("cesiumContainer")
+              );
             }
+            break;
+          case "槽具窗户":
+            console.log("槽具窗户", data);
+            this.casementMeth = null;
+            if (!this.controls) {
+              this.controls = new THREE.OrbitControls(
+                this.camera,
+                document.getElementById("cesiumContainer")
+              );
+            }
+            this.addEventSelectCasementGrrove();
+            this.cursorName = "auto";
             break;
           default:
             // if (!this.controls) {
             //   this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
             // }
 
+            break;
+        }
+      }
+      if (data.changeName) {
+        switch (data.changeName) {
+          case "修改窗户":
+            if (this.casementMeth) {
+              this.casementMeth[data.changeType][data.changeTaget] =
+                data.changeData;
+              console.log("修改窗户", data);
+            }
+
+            break;
+          case "修改窗户颜色":
+            if (this.casementMeth) {
+              this.casementMeth[data.changeType][data.changeTaget].set(data.changeData);
+              this.casementMeth[data.changeType].opacity = parseFloat(data.changeData.split(',')[3].split(')')[0]);
+              console.log("修改窗户颜色", data);
+            }
+
+            break;
+          default:
             break;
         }
       }
@@ -435,19 +502,10 @@ export default {
     },
   },
   // watch: {
-  //   dialogVisible(val) {
+  //   casementMeth(val) {
   //     // 小窗口现实隐藏控制视角和控制
-  //     console.log("dialogVisible", val);
-  //     if (val) {
-  //       this.recoveryCameraPotion();
-  //     } else {
-  //       if (!this.controls) {
-  //         this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
-  //       }
-  //       this.cursorName = "auto";
-  //     }
-  //     let threeDom = document.getElementById("cesiumContainer");
-  //     threeDom.removeEventListener("click", this.addSpritePoint, false);
+  //     console.log("casementMeth", val);
+  //     this.Set_SelectCasementMeth(val);
   //   },
   // },
 };

@@ -37,7 +37,7 @@
               <el-input
                 v-model="selectCasementName"
                 placeholder="未选择"
-                :disabled="!selectCasementTypeName"
+                :disabled="!allowModification"
               ></el-input>
             </el-row>
             <div class="option-list">长</div>
@@ -47,21 +47,21 @@
               <avue-input-number
                 v-model="selectCasementSizeL"
                 @change="handleChangeSizeH"
-                :disabled="!selectCasementTypeName"
+                :disabled="!allowModification"
               ></avue-input-number>
             </div>
             <div class="option-list">
               <avue-input-number
                 v-model="selectCasementSizeW"
                 @change="handleChangeSizeW"
-                :disabled="!selectCasementTypeName"
+                :disabled="!allowModification"
               ></avue-input-number>
             </div>
             <div class="option-list">
               <avue-input-number
                 v-model="selectCasementSizeH"
                 @change="handleChangeSizeL"
-                :disabled="!selectCasementTypeName"
+                :disabled="!allowModification"
               ></avue-input-number>
             </div>
           </div>
@@ -74,21 +74,21 @@
               <avue-input-number
                 v-model="selectCasementPositonX"
                 @change="handleChangePositonX"
-                :disabled="!selectCasementTypeName"
+                :disabled="!allowModification"
               ></avue-input-number>
             </div>
             <div class="option-list">
               <avue-input-number
                 v-model="selectCasementPositonY"
                 @change="handleChangePositonY"
-                :disabled="!selectCasementTypeName"
+                :disabled="!allowModification"
               ></avue-input-number>
             </div>
             <div class="option-list">
               <avue-input-number
                 v-model="selectCasementPositonZ"
                 @change="handleChangePositonZ"
-                :disabled="!selectCasementTypeName"
+                :disabled="!allowModification"
               ></avue-input-number>
             </div>
           </el-row>
@@ -99,7 +99,7 @@
               <el-slider
                 @change="changeAngleX"
                 v-model="selectCasementAngleX"
-                :disabled="!selectCasementTypeName"
+                :disabled="!allowModification"
                 class="angle-slider"
                 show-input
                 :max="360"
@@ -110,7 +110,7 @@
               <el-slider
                 @change="changeAngleY"
                 v-model="selectCasementAngleY"
-                :disabled="!selectCasementTypeName"
+                :disabled="!allowModification"
                 class="angle-slider"
                 show-input
                 :max="360"
@@ -121,7 +121,7 @@
               <el-slider
                 @change="changeAngleZ"
                 v-model="selectCasementAngleZ"
-                :disabled="!selectCasementTypeName"
+                :disabled="!allowModification"
                 class="angle-slider"
                 show-input
                 :max="360"
@@ -134,13 +134,13 @@
             <avue-input-color
               placeholder="请选择"
               v-model="SelectCasementColor"
-              :disabled="!selectCasementTypeName"
+              :disabled="!allowModification"
 
               @change="ChangeCasementColor"
             ></avue-input-color>
           </el-row>
           <el-row class="btn-list">
-            <el-button size="small" @click="modifyCasement">修改</el-button>
+            <el-button size="small" @click="modifyCasement">{{ allowModification ? '确定' : '修改'}}</el-button>
             <el-button size="small">删除</el-button>
           </el-row>
         </el-collapse-item>
@@ -446,7 +446,7 @@ export default {
       casementAngleY: 0,
       casementAngleZ: 0,
       casementColor: "rgba(32, 76, 159, 0.6)",
-      activeNames: ["选中的窗口"],
+      activeNames: ["增加窗口"],
       GeometryType: "长方体",
       GeometryOptions: [
         {
@@ -475,6 +475,7 @@ export default {
         },
       ],
       activeIndex: -1,
+      allowModification: false
     };
   },
   created() {
@@ -537,11 +538,17 @@ export default {
       this.casementName = name;
     },
     modifyCasement(type) {
-      let parendData = {
-        name: "修改窗户",
-        parentName: "casement",
-      };
-      this.$emit("getChildData", parendData);
+      if(this.selectCasementName) {
+        this.allowModification = !this.allowModification;
+      } else {
+        this.allowModification = false;
+      }
+      
+      // let parendData = {
+      //   name: "修改窗户",
+      //   parentName: "casement",
+      // };
+      // this.$emit("getChildData", parendData);
     },
     setData() {
       let data = {

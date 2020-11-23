@@ -182,7 +182,7 @@ export default {
       // 选择墙壁
       this.setIntersects(event, this.WallGroup.children, (intersects) => {
         if (intersects.length > 0) {
-          this.wallMesh = this.setSelectedObjects(intersects);
+          this.wallMesh = this.setSelectedObjectsAdd(intersects, true);
           this.Set_TagetName(this.wallMesh.name);
           // console.log(this.wallMesh.material.color.getStyle());
           let color = this.wallMesh.material.color.getStyle();
@@ -203,7 +203,7 @@ export default {
       this.setIntersects(event, this.WallGroup.children, (intersects) => {
         if (intersects.length > 0) {
           this.cursorName = "pointer";
-          this.setSelectedObjects(intersects);
+          this.setSelectedObjectsAdd(intersects, true);
         } else {
           this.cursorName = "auto";
         }

@@ -16,7 +16,7 @@
       <span slot="label"
         ><i class="el-icon-date icon"></i> {{ item.title }}</span
       >
-      <keep-alive>
+      <keep-alive  v-if="item.name === editableTabsValue">
         <component v-bind:is="item.componentName" :data="item.data" @getChildData="getChildData">
           <div class="company_use" slot="header" v-if="item.header">
             <i class="iconfont iconVIP"></i><span>{{ item.header }}</span>
@@ -40,6 +40,8 @@ import floorPanel from "./floorPanel";
 import wallPanel from "./wallPanel";
 import casementPanel from "./casementPanel";
 
+import { listSearchMixin } from "../../mixin"; //混淆请求
+
 export default {
   name: "leftPanel",
   components: {
@@ -47,6 +49,7 @@ export default {
     wallPanel,
     casementPanel
   },
+  mixins: [listSearchMixin],
   data() {
     return {
       editableTabsValue: "wall",
@@ -89,21 +92,12 @@ export default {
       let data = this.editableTabs.filter((item) => {
         return item.name === that.editableTabsValue;
       })
-      this.changeNavData(data[0])
+      console.log(e)
+      this.Set_DialogVisible(false)
     },
     setEditableTabsValue() {
       this.showbar = !this.showbar;
       // this.$emit("getChildData", data);
-    },
-    changeNavData(data) {
-      switch (data) {
-        case 'wall':
-          
-          break;
-      
-        default:
-          break;
-      }
     },
     getChildData(data){
       // console.log("获取chidren数据", data);

@@ -20,7 +20,7 @@
       </div>
     </div>
     <dialogp :id="layerId" @queryDialog="queryDialog">
-      <el-row style="position: relative; margin-top: 10px;">
+      <el-row style="position: relative; margin-top: 10px;"  v-if="data[activeIndex].name === '基础墙体'">
         <el-select v-model="GeometryType" placeholder="请选择">
           <el-option
             v-for="item in GeometryOptions"
@@ -32,10 +32,15 @@
         </el-select>
         <span class="inputName">轮廓：</span>
       </el-row>
+      <el-row style="margin-top: 10px;"  v-if="data[activeIndex].name !== '基础墙体'">
+        <span class="inputName">轮廓：</span>
+        <el-input v-model="data[activeIndex].name" disabled></el-input>
+      </el-row>
       <el-row style="margin-top: 10px;">
         <span class="inputName">名称：</span>
         <el-input v-model="wallName" placeholder="请输入内容"></el-input>
       </el-row>
+      
       <div class="changeSizeArea" v-if="GeometryType === '四边形'">
         <div class="option-list" style="padding-left: 0">
           <avue-input-number v-model="drawSizeH"></avue-input-number>
@@ -47,10 +52,10 @@
         </div>
       </div>
       <el-row class="btn-list">
-        <el-button size="small">增加</el-button>
-        <el-button size="small">撤销</el-button>
-        <el-button size="small" @click="painting">自绘</el-button>
-        <el-button size="small" @click="wallClose">闭合</el-button>
+        <el-button size="small" v-if="data[activeIndex].name !== '自定义墙体'">{{threePoints.length > 0 ? '删除' : '增加'}}</el-button>
+        <el-button size="small" v-if="data[activeIndex].name === '自定义墙体'" disabled>撤销</el-button>
+        <el-button size="small" v-if="data[activeIndex].name === '自定义墙体'" @click="painting">重绘</el-button>
+        <el-button size="small" v-if="data[activeIndex].name === '自定义墙体'" @click="wallClose">闭合</el-button>
       </el-row>
     </dialogp>
   </div>
@@ -82,7 +87,7 @@ export default {
       parendData: {},
       drawSizeH: 6,
       drawSizeW: 10,
-      activeIndex: -1,
+      activeIndex: 0,
       data: [
         {
           name: "基础墙体",
@@ -91,7 +96,7 @@ export default {
           parentName: "wall",
         },
         {
-          name: "透明墙体",
+          name: "自定义墙体",
           url: "img/wall/wall2.png",
           size: [1, 1],
           parentName: "wall",
@@ -102,17 +107,9 @@ export default {
         {
           value: "四边形",
           label: "四边形",
-        },
-        {
-          value: "圆形",
-          label: "圆形",
-        },
-        {
-          value: "三角形",
-          label: "三角形",
-        },
+        }
       ],
-      wallName: "",
+      GeometrySelect: null,
     };
   },
   created() {
@@ -126,7 +123,7 @@ export default {
       date.getMinutes() +
       date.getSeconds();
     this.wallName = name;
-    console.log("this.data", this.data);
+    // console.log("this.data", this.data);
   },
   methods: {
     painting() {
@@ -355,8 +352,9 @@ export default {
   }
   .btn-list {
     margin-top: 10px;
-    .el-button + .el-button {
-      margin-left: 4px;
+    display: flex;
+    .el-button {
+      flex: 1;
     }
   }
   .hh {

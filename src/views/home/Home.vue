@@ -270,7 +270,13 @@ export default {
             } else {
               this.$message.error("您还没有绘画墙轮廓呢");
             }
-
+            if (!this.controls) {
+              this.controls = new THREE.OrbitControls(
+                this.camera,
+                document.getElementById("cesiumContainer")
+              );
+            }
+            this.Three_Points(this.pointList);
             break;
           case "确定墙轮廓":
             console.log("确定墙轮廓");

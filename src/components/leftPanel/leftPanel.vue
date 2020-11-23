@@ -92,7 +92,7 @@ export default {
       let data = this.editableTabs.filter((item) => {
         return item.name === that.editableTabsValue;
       })
-      console.log(e)
+      // console.log(e)
       this.Set_DialogVisible(false)
     },
     setEditableTabsValue() {

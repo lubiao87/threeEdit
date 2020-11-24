@@ -46,7 +46,7 @@
             <div class="option-list" style="padding-left: 0">
               <avue-input-number
                 v-model="selectCasementSizeL"
-                @change="handleChangeSizeH"
+                @change="handleChangeSizeL"
                 :disabled="!allowModification"
               ></avue-input-number>
             </div>
@@ -60,7 +60,7 @@
             <div class="option-list">
               <avue-input-number
                 v-model="selectCasementSizeH"
-                @change="handleChangeSizeL"
+                @change="handleChangeSizeH"
                 :disabled="!allowModification"
               ></avue-input-number>
             </div>
@@ -167,13 +167,13 @@
             <div class="option-list">宽</div>
             <div class="option-list">高</div>
             <div class="option-list" style="padding-left: 0">
-              <avue-input-number v-model="casementSizeH"></avue-input-number>
+              <avue-input-number v-model="casementSizeL"></avue-input-number>
             </div>
             <div class="option-list">
               <avue-input-number v-model="casementSizeW"></avue-input-number>
             </div>
             <div class="option-list">
-              <avue-input-number v-model="casementSizeL"></avue-input-number>
+              <avue-input-number v-model="casementSizeH"></avue-input-number>
             </div>
           </div>
 
@@ -303,6 +303,9 @@ export default {
       },
       set(val) {
         console.log("神奇1", val);
+        if(this.selectCasementMeth) {
+          this.selectCasementMeth.data.height = val;
+        }
       },
     },
     selectCasementSizeW: {
@@ -315,18 +318,24 @@ export default {
       },
       set(val) {
         console.log("神奇2", val);
+        if(this.selectCasementMeth) {
+          this.selectCasementMeth.data.width = val;
+        }
       },
     },
     selectCasementSizeL: {
       get() {
         if (this.selectCasementMeth) {
-          return this.selectCasementMeth.data.depth;
+          return this.selectCasementMeth.data.length;
         } else {
           return 0;
         }
       },
       set(val) {
         console.log("神奇3", val);
+        if(this.selectCasementMeth) {
+          this.selectCasementMeth.data.length = val;
+        }
       },
     },
     selectCasementPositonX: {
@@ -339,6 +348,9 @@ export default {
       },
       set(val) {
         console.log("神奇11", val);
+        if(this.selectCasementMeth) {
+          this.selectCasementMeth.data.x = val;
+        }
       },
     },
     selectCasementPositonY: {
@@ -351,6 +363,9 @@ export default {
       },
       set(val) {
         console.log("神奇11", val);
+        if(this.selectCasementMeth){
+          this.selectCasementMeth.data.y = val;
+        }
       },
     },
     selectCasementPositonZ: {
@@ -363,6 +378,10 @@ export default {
       },
       set(val) {
         console.log("神奇11", val);
+        if(this.selectCasementMeth){
+          this.selectCasementMeth.data.z = val;
+        }
+        
       },
     },
     selectCasementAngleX: {
@@ -544,11 +563,12 @@ export default {
         this.allowModification = false;
       }
       
-      // let parendData = {
-      //   name: "修改窗户",
-      //   parentName: "casement",
-      // };
-      // this.$emit("getChildData", parendData);
+      let parendData = {
+        name: "修改窗户",
+        parentName: "casement",
+        data: this.allowModification
+      };
+      this.$emit("getChildData", parendData);
     },
     setData() {
       let data = {
@@ -576,9 +596,10 @@ export default {
       // console.log(data);
       let parendData = {
         changeType: "scale",
-        changeTaget: "x",
+        changeTaget: "y",
         changeData: data,
         changeName: "修改窗户",
+        changeDataValue: "height"
       };
       this.$emit("getChildData", parendData);
     },
@@ -589,6 +610,7 @@ export default {
         changeTaget: "z",
         changeData: data,
         changeName: "修改窗户",
+        changeDataValue: "width"
       };
       this.$emit("getChildData", parendData);
     },
@@ -596,9 +618,10 @@ export default {
       // console.log(data);
       let parendData = {
         changeType: "scale",
-        changeTaget: "y",
+        changeTaget: "x",
         changeData: data,
         changeName: "修改窗户",
+        changeDataValue: "length"
       };
       this.$emit("getChildData", parendData);
     },
@@ -609,6 +632,7 @@ export default {
         changeTaget: "x",
         changeData: data,
         changeName: "修改窗户",
+        changeDataValue: "x"
       };
       this.$emit("getChildData", parendData);
     },
@@ -619,6 +643,7 @@ export default {
         changeTaget: "y",
         changeData: data,
         changeName: "修改窗户",
+        changeDataValue: "y"
       };
       this.$emit("getChildData", parendData);
     },
@@ -629,6 +654,7 @@ export default {
         changeTaget: "z",
         changeData: data,
         changeName: "修改窗户",
+        changeDataValue: "z"
       };
       this.$emit("getChildData", parendData);
     },
@@ -640,6 +666,7 @@ export default {
         changeTaget: "x",
         changeData: (data * Math.PI) / 180,
         changeName: "修改窗户",
+        changeDataValue: "rotationX"
       };
       this.$emit("getChildData", parendData);
     },
@@ -650,6 +677,7 @@ export default {
         changeTaget: "y",
         changeData: (data * Math.PI) / 180,
         changeName: "修改窗户",
+        changeDataValue: "rotationY"
       };
       this.$emit("getChildData", parendData);
     },
@@ -660,6 +688,7 @@ export default {
         changeTaget: "z",
         changeData: (data * Math.PI) / 180,
         changeName: "修改窗户",
+        changeDataValue: "rotationZ"
       };
       this.$emit("getChildData", parendData);
     },

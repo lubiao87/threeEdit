@@ -72,7 +72,7 @@ export const listSearch = {
     paintGlass(data) {
       let options = {
         width: data.width || 1,
-        depth: data.depth || 1,
+        length: data.length || 1,
         height: data.height || 1,
         x: data.x || 0,
         y: data.y || 0,
@@ -99,14 +99,14 @@ export const listSearch = {
       //创建长方体几何体
       var gemotery = new THREE.BoxGeometry(1, 1, 1)
       // options.width,
-      // options.depth,
+      // options.length,
       // options.height
       //创建网格对象以及进行位置的设定
       var mesh = new THREE.Mesh(gemotery, material)
       mesh.name = options.name
       mesh.typeName = '长方体'
       mesh.data = options;
-      mesh.scale.set(options.width, options.depth, options.height)
+      mesh.scale.set(options.length, options.height, options.width)
       mesh.position.set(options.x, options.y, options.z)
 
       mesh.rotation.z = (options.rotationZ * Math.PI) / 180
@@ -194,11 +194,17 @@ export const listSearch = {
       let mesh = intersects[0].object
       if (this.OutlinePass.selectedObjects.length > 1) {
         this.OutlinePass.selectedObjects.splice(1, 1)
+        
       }
       if (flag) {
+        if(this.OutlinePass.selectedObjects[0] && this.OutlinePass.selectedObjects[0].typeName === mesh.typeName) {
+          this.OutlinePass.selectedObjects = [];
+        } 
         this.OutlinePass.selectedObjects.push(mesh)
+      } else {
+        this.OutlinePass.selectedObjects = [mesh];
       }
-
+      console.log(this.OutlinePass.selectedObjects)
       this.scene.updateMatrixWorld(true)
       var worldPosition = new THREE.Vector3()
       mesh.getWorldPosition(worldPosition)

@@ -16,6 +16,7 @@
             </li>
         </ul>
     </div>
+    <slot></slot>
   </div>
 </template>
 

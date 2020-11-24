@@ -52,7 +52,7 @@
         </div>
       </div>
       <el-row class="btn-list">
-        <el-button size="small" v-if="data[activeIndex].name !== '自定义墙体'">{{threePoints.length > 0 ? '删除' : '增加'}}</el-button>
+        <el-button size="small" v-if="data[activeIndex].name !== '自定义墙体'" disabled>{{threePoints.length > 0 ? '删除' : '增加'}}</el-button>
         <el-button size="small" v-if="data[activeIndex].name === '自定义墙体'" disabled>撤销</el-button>
         <el-button size="small" v-if="data[activeIndex].name === '自定义墙体'" @click="painting">重绘</el-button>
         <el-button size="small" v-if="data[activeIndex].name === '自定义墙体'" @click="wallClose">闭合</el-button>

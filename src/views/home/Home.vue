@@ -6,7 +6,12 @@
       :style="{ cursor: cursorName }"
     ></div>
     <div class="hearder">
-      <hearder />
+      <hearder>
+        <div class="rt-button">
+          <el-button class="button"><i class="el-icon-view"></i>预览</el-button>
+          <el-button type="danger" class="button"><i class="el-icon-folder-checked"></i>保存</el-button>
+        </div>
+      </hearder>
     </div>
     <div class="tool-bar">
       <leftPanel @getChildData="getChildData" />
@@ -35,7 +40,7 @@ export default {
     hearder,
     leftPanel,
   },
-  data: function (params) {
+  data: function(params) {
     return {
       photosphereShow: "none",
       camera: null,
@@ -182,7 +187,7 @@ export default {
       // 选择墙壁
       this.setIntersects(event, this.WallGroup.children, (intersects) => {
         if (intersects.length > 0) {
-          this.wallMesh = this.setSelectedObjectsAdd(intersects, true);
+          this.wallMesh = this.setSelectedObjectsAdd(intersects, false);
           this.Set_TagetName(this.wallMesh.name);
           // console.log(this.wallMesh.material.color.getStyle());
           let color = this.wallMesh.material.color.getStyle();
@@ -203,7 +208,7 @@ export default {
       this.setIntersects(event, this.WallGroup.children, (intersects) => {
         if (intersects.length > 0) {
           this.cursorName = "pointer";
-          this.setSelectedObjectsAdd(intersects, true);
+          this.setSelectedObjectsAdd(intersects, false);
         } else {
           this.cursorName = "auto";
         }
@@ -216,6 +221,7 @@ export default {
           this.casementMeth = this.setSelectedObjectsAdd(intersects, true);
           this.Set_SetGrroveTool(this.casementMeth.name);
           this.Set_SelectCasementMeth(this.casementMeth);
+          console.log('选中', this.casementMeth)
 
           let color = this.casementMeth.material.color.getStyle();
           this.Set_GrroveColor(color);
@@ -238,6 +244,7 @@ export default {
 
           this.setSelectedObjectsAdd(intersects, true);
         } else {
+          this.OutlinePass.selectedObjects = [];
           this.cursorName = "auto";
         }
       });
@@ -313,7 +320,7 @@ export default {
             let option = {
               width: data.data.casementSize.w,
               height: data.data.casementSize.h,
-              depth: data.data.casementSize.l,
+              length: data.data.casementSize.l,
               addMesh: true,
               // y: data.data.casementSize.l / 2 + data.data.casementPositon.y,
               y: data.data.casementPositon.y,
@@ -333,23 +340,18 @@ export default {
                 document.getElementById("cesiumContainer")
               );
             }
-            this.addEventSelectCasementGrrove();
+            
             this.cursorName = "auto";
             break;
           case "显示窗户信息":
             console.log("显示窗户信息", data);
             this.cursorName = "auto";
+            this.addEventSelectCasementGrrove();
             break;
           case "修改窗户":
             console.log("修改窗户", data);
-            this.casementMeth = null;
-            if (!this.controls) {
-              this.controls = new THREE.OrbitControls(
-                this.camera,
-                document.getElementById("cesiumContainer")
-              );
-            }
-            this.addEventSelectCasementGrrove();
+            // this.casementMeth = null;
+            // this.Set_SelectCasementMeth(this.casementMeth);
             break;
           case "确定窗户":
             console.log("确定窗户", data);
@@ -401,7 +403,7 @@ export default {
                 document.getElementById("cesiumContainer")
               );
             }
-            this.addEventSelectCasementGrrove();
+            // this.addEventSelectCasementGrrove();
             this.cursorName = "auto";
             break;
           default:
@@ -418,14 +420,21 @@ export default {
             if (this.casementMeth) {
               this.casementMeth[data.changeType][data.changeTaget] =
                 data.changeData;
+                this.casementMeth.data[data.changeDataValue] = data.changeData;
               console.log("修改窗户", data);
             }
 
             break;
           case "修改窗户颜色":
             if (this.casementMeth) {
-              this.casementMeth[data.changeType][data.changeTaget].set(data.changeData);
-              this.casementMeth[data.changeType].opacity = parseFloat(data.changeData.split(',')[3].split(')')[0]);
+              this.casementMeth[data.changeType][data.changeTaget].set(
+                data.changeData
+              );
+              this.casementMeth[data.changeType].opacity = parseFloat(
+                data.changeData.split(",")[3].split(")")[0]
+              );
+              this.casementMeth.data.color = data.changeData;
+              this.casementMeth.data.opacity = parseFloat(data.changeData.split(',')[3].split(')')[0]);
               console.log("修改窗户颜色", data);
             }
 
@@ -433,6 +442,7 @@ export default {
           default:
             break;
         }
+        this.Set_SelectCasementMeth(this.casementMeth);
       }
     },
     newWallMesh(point) {
@@ -581,6 +591,20 @@ export default {
     width: calc(100% - 80px);
     height: calc(100% - 60px);
     color: #000;
+  }
+  .rt-button {
+    height: 100%;
+    float: right;
+    .button {
+      height: 100%;
+      border: 0px solid;
+      border-radius: 0;
+      width: 100px;
+          padding: 0;
+      i {
+        margin-right: 4px;
+      }
+    }
   }
 }
 </style>

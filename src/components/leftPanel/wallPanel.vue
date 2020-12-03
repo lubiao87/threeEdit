@@ -20,7 +20,7 @@
       </div>
     </div>
     <dialogp :id="layerId" @queryDialog="queryDialog">
-      <el-row style="position: relative; margin-top: 10px;"  v-if="data[activeIndex].name === '基础墙体'">
+      <el-row style="position: relative; margin-top: 10px;">
         <el-select v-model="GeometryType" placeholder="请选择">
           <el-option
             v-for="item in GeometryOptions"
@@ -31,10 +31,6 @@
           </el-option>
         </el-select>
         <span class="inputName">轮廓：</span>
-      </el-row>
-      <el-row style="margin-top: 10px;"  v-if="data[activeIndex].name !== '基础墙体'">
-        <span class="inputName">轮廓：</span>
-        <el-input v-model="data[activeIndex].name" disabled></el-input>
       </el-row>
       <el-row style="margin-top: 10px;">
         <span class="inputName">名称：</span>
@@ -52,10 +48,10 @@
         </div>
       </div>
       <el-row class="btn-list">
-        <el-button size="small" v-if="data[activeIndex].name !== '自定义墙体'" disabled>{{threePoints.length > 0 ? '删除' : '增加'}}</el-button>
-        <el-button size="small" v-if="data[activeIndex].name === '自定义墙体'" disabled>撤销</el-button>
-        <el-button size="small" v-if="data[activeIndex].name === '自定义墙体'" @click="painting">重绘</el-button>
-        <el-button size="small" v-if="data[activeIndex].name === '自定义墙体'" @click="wallClose">闭合</el-button>
+        <el-button size="small" v-if="GeometryType !== '绘画'" disabled>{{threePoints.length > 0 ? '删除' : '增加'}}</el-button>
+        <el-button size="small" v-if="GeometryType === '绘画'" disabled>撤销</el-button>
+        <el-button size="small" v-if="GeometryType === '绘画'" @click="painting">重绘</el-button>
+        <el-button size="small" v-if="GeometryType === '绘画'" @click="wallClose">闭合</el-button>
       </el-row>
     </dialogp>
   </div>
@@ -96,7 +92,7 @@ export default {
           parentName: "wall",
         },
         {
-          name: "自定义墙体",
+          name: "贴图1墙体",
           url: "img/wall/wall2.png",
           size: [1, 1],
           parentName: "wall",
@@ -107,7 +103,11 @@ export default {
         {
           value: "四边形",
           label: "四边形",
-        }
+        },
+        {
+          value: "绘画",
+          label: "绘画",
+        },
       ],
       GeometrySelect: null,
     };

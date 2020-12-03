@@ -9,7 +9,9 @@
       <hearder>
         <div class="rt-button">
           <el-button class="button"><i class="el-icon-view"></i>预览</el-button>
-          <el-button type="danger" class="button"><i class="el-icon-folder-checked"></i>保存</el-button>
+          <el-button type="danger" class="button"
+            ><i class="el-icon-folder-checked"></i>保存</el-button
+          >
         </div>
       </hearder>
     </div>
@@ -51,7 +53,7 @@ export default {
       baifenbiShow: false,
       pointsIndex: 0, // 视角线进度点
       assistGroup: null,
-      clearPosition: new THREE.Vector3(0, 20, 0.1),
+      clearPosition: new THREE.Vector3(0, 20, 0.2),
       pointList: [],
       cursorName: "default",
       // 创建通道,显示外轮廓边框
@@ -65,7 +67,7 @@ export default {
     // console.log(THREE);
     this.init();
     this.animate();
-    console.log("this.controls", this.controls);
+    // console.log("this.controls", this.controls);
   },
   methods: {
     init() {
@@ -116,9 +118,7 @@ export default {
 
       this.raycaster = new THREE.Raycaster();
       this.mouse = new THREE.Vector2();
-      // 坐标系辅助显示
-      let axesHelper = new THREE.AxesHelper(10);
-      this.scene.add(axesHelper);
+
       this.assistGroup = new THREE.Group();
       this.scene.add(this.assistGroup);
       this.points = new THREE.Group();
@@ -129,6 +129,10 @@ export default {
       this.scene.add(this.casementGroup);
       // model
       // let loader = new THREE.GLTFLoader();
+
+      // 坐标系辅助显示
+      let axesHelper = new THREE.AxesHelper(10);
+      this.scene.add(axesHelper);
       var gridHelper = new THREE.GridHelper(30, 30);
       this.scene.add(gridHelper);
       this.addTexture();
@@ -219,11 +223,12 @@ export default {
       this.setIntersects(event, this.casementGroup.children, (intersects) => {
         let threeDom = document.getElementById("cesiumContainer");
         if (intersects.length > 0) {
-          
-          if(this.casementMeth && this.casementMeth.name === intersects[0].object.name) {
+          if (
+            this.casementMeth &&
+            this.casementMeth.name === intersects[0].object.name
+          ) {
             this.casementMeth = null;
             this.OutlinePass.selectedObjects = [];
-
           } else {
             this.casementMeth = this.setSelectedObjectsAdd(intersects, true);
             this.Set_SetGrroveTool(this.casementMeth.name);
@@ -231,7 +236,6 @@ export default {
             this.Set_GrroveColor(color);
           }
           this.Set_SelectCasementMeth(this.casementMeth);
-          
         }
         // console.log(layerOpen)
       });
@@ -241,15 +245,14 @@ export default {
       this.setIntersects(event, this.casementGroup.children, (intersects) => {
         if (intersects.length > 0) {
           this.cursorName = "pointer";
-          if(!this.casementMeth) {
+          if (!this.casementMeth) {
             this.setSelectedObjectsAdd(intersects, true);
           }
-          
         } else {
-          if(!this.selectCasementMeth) {
+          if (!this.selectCasementMeth) {
             this.OutlinePass.selectedObjects = [];
           }
-          
+
           this.cursorName = "auto";
         }
         // console.log(intersects.length)
@@ -346,7 +349,7 @@ export default {
                 document.getElementById("cesiumContainer")
               );
             }
-            
+
             this.cursorName = "auto";
             break;
           case "显示窗户信息":
@@ -364,10 +367,7 @@ export default {
             this.cursorName = "auto";
             let threeDom9 = document.getElementById("cesiumContainer");
             if (!this.controls) {
-              this.controls = new THREE.OrbitControls(
-                this.camera,
-                threeDom9
-              );
+              this.controls = new THREE.OrbitControls(this.camera, threeDom9);
             }
             this.Set_DialogVisible(false);
             this.remomveSelectCasementGrrove();
@@ -380,7 +380,7 @@ export default {
             console.log("挖槽破窗", data);
             let name = this.wallMesh.name;
             this.WallGroup.remove(this.wallMesh);
-            
+
             this.wallMesh = this.createResultMesh(
               this.wallMesh,
               this.casementMeth,
@@ -433,7 +433,7 @@ export default {
             if (this.casementMeth) {
               this.casementMeth[data.changeType][data.changeTaget] =
                 data.changeData;
-                this.casementMeth.data[data.changeDataValue] = data.changeData;
+              this.casementMeth.data[data.changeDataValue] = data.changeData;
               console.log("修改窗户", data);
             }
 
@@ -447,7 +447,9 @@ export default {
                 data.changeData.split(",")[3].split(")")[0]
               );
               this.casementMeth.data.color = data.changeData;
-              this.casementMeth.data.opacity = parseFloat(data.changeData.split(',')[3].split(')')[0]);
+              this.casementMeth.data.opacity = parseFloat(
+                data.changeData.split(",")[3].split(")")[0]
+              );
               console.log("修改窗户颜色", data);
             }
 
@@ -462,16 +464,85 @@ export default {
       // 创建墙体
       var shape = new THREE.Shape();
       /**四条直线绘制一个矩形轮廓*/
-      shape.moveTo(0, 0.1); //起点
-      shape.lineTo(-3, 0.1); //第2点
-      shape.lineTo(-3, -0.1); //第3点
-      shape.lineTo(0, -0.1); //第4点
-      shape.lineTo(0, 0.1); //第5点
+      shape.moveTo(0, 0); //起点
+      shape.lineTo(-3, 0); //第2点
+      shape.lineTo(-3, -0.2); //第3点
+      shape.lineTo(0, -0.2); //第4点
+      shape.lineTo(0, 0); //第5点
       /**创建轮廓的扫描轨迹(3D样条曲线)*/
       var curve = new THREE.SplineCurve3([
         this.pointList[this.pointList.length - 1],
         point,
       ]);
+      let p1 = this.pointList[this.pointList.length - 1],
+        p2 = point;
+      // var p1 = this.pointList[this.pointList.length - 1];
+      // var p2 = point;
+      // var p3 = new THREE.Vector3(point.x, point.y + 3, point.z);
+      // var p4 = new THREE.Vector3(this.pointList[this.pointList.length - 1].x, point.y + 3, this.pointList[this.pointList.length - 1].z);
+      var vertices = new Float32Array([
+        p1.x,
+        p1.y,
+        p1.z, //顶点1坐标
+        p2.x,
+        p2.y,
+        p2.z, //顶点2坐标
+        p2.x,
+        p2.y + 3,
+        p2.z, //顶点3坐标
+        p2.x,
+        p2.y + 3,
+        p2.z, //顶点3坐标
+        p1.x,
+        p1.y + 3,
+        p1.z, //顶点5坐标
+        p1.x,
+        p1.y,
+        p1.z, //顶点1坐标
+      ]);
+      var points = [
+        new THREE.Vector3(p1.x, p1.y, p1.z),
+        new THREE.Vector3(p2.x, p2.y, p2.z),
+        new THREE.Vector3(p2.x, p2.y + 3, p2.z),
+        new THREE.Vector3(p1.x, p1.y + 3, p1.z),
+        new THREE.Vector3(p1.x, p1.y, p1.z),
+      ];
+      // 通过顶点定义轮廓
+      var shape2 = new THREE.Shape(points);
+      // var attribue = new THREE.BufferAttribute(vertices, 3); //3个为一组，表示一个顶点的xyz坐标
+      // 通过顶点定义轮廓
+      // var shape2 = new THREE.Shape(points2);
+      // var geometry2 = new THREE.ShapeGeometry(shape2, 25);
+      var geometry2 = new THREE.ExtrudeGeometry( //拉伸造型
+        shape2, //二维轮廓
+        //拉伸参数
+        {
+          amount: -0.05, //拉伸长度
+          bevelEnabled: false, //无倒角
+        }
+      );
+      // geometry2.attributes.position = attribue;
+      // console.log(points2);
+
+      var textureLoader = new THREE.TextureLoader();
+      // // 加载纹理贴图
+      var texture = textureLoader.load("./img/wall/diffuse.jpg");
+      // 加载凹凸贴图
+      var textureBump = textureLoader.load("./img/wall/bump.jpg");
+
+      // 设置阵列模式   默认ClampToEdgeWrapping  RepeatWrapping：阵列  镜像阵列：MirroredRepeatWrapping
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      // uv两个方向纹理重复数量
+      texture.repeat.set(1, 1);
+      var material2 = new THREE.MeshPhongMaterial({
+        map: texture, // 普通纹理贴图
+        bumpMap: textureBump, //凹凸贴图
+        bumpScale: 3, //设置凹凸高度，默认值1。
+        side: THREE.DoubleSide, //两面可见
+      }); //材质对象
+      let wallMesh2 = new THREE.Mesh(geometry2, material2); //网格模型对象
+
       var geometry = new THREE.ExtrudeGeometry( //拉伸造型
         shape, //二维轮廓
         //拉伸参数
@@ -483,11 +554,11 @@ export default {
       );
       var material = new THREE.MeshPhongMaterial({
         color: "#666",
-        side: THREE.DoubleSide, //两面可见
       }); //材质对象
       let wallMesh = new THREE.Mesh(geometry, material); //网格模型对象
       wallMesh.name = "墙壁" + this.pointList.length;
       this.WallGroup.add(wallMesh);
+      // this.WallGroup.add(wallMesh2);
     },
     newFloorTexture(data) {
       if (this.floorMesh) {
@@ -504,8 +575,16 @@ export default {
         points.push(new THREE.Vector3(item.x, item.z, 1));
       });
       var shape = new THREE.Shape(points);
-      console.log(points, this.threePoints);
-      let geometry = new THREE.ShapeGeometry(shape, 25); //矩形平面
+      // console.log(points, this.threePoints);
+      // let geometry = new THREE.ShapeGeometry(shape, 25); //矩形平面
+      var geometry = new THREE.ExtrudeGeometry( //拉伸造型
+        shape, //二维轮廓
+        //拉伸参数
+        {
+          amount: -0.05, //拉伸长度
+          bevelEnabled: false, //无倒角
+        }
+      );
       // var geometry = new THREE.PlaneGeometry(20, 10); //矩形平面
       // TextureLoader创建一个纹理加载器对象，可以加载图片作为几何体纹理
       let textureLoader = new THREE.TextureLoader();
@@ -520,12 +599,33 @@ export default {
       // 偏移效果
       // texture.offset = new THREE.Vector2(0.5, 0.5)
 
-      let material = new THREE.MeshLambertMaterial({
-        // 设置纹理贴图：Texture对象作为材质map属性的属性值
-        map: texture,
-        side: THREE.DoubleSide, //两面可见
-      }); //材质对象Material
-      this.floorMesh = new THREE.Mesh(geometry, material); //网格模型对象Mesh
+      // let material = new THREE.MeshLambertMaterial({
+      //   // 设置纹理贴图：Texture对象作为材质map属性的属性值
+      //   map: texture,
+      //   side: THREE.DoubleSide, //两面可见
+      // }); //材质对象Material
+      let materials = [
+        //下标0：右面材质
+        new THREE.MeshBasicMaterial({
+          map: texture,
+        }),
+        new THREE.MeshBasicMaterial({
+          color: "#ccc", //三角面颜色
+        }),
+        new THREE.MeshBasicMaterial({
+          color: "#ccc", //三角面颜色
+        }),
+        new THREE.MeshBasicMaterial({
+          color: "#ccc", //三角面颜色
+        }),
+        new THREE.MeshBasicMaterial({
+          color: "#ccc", //三角面颜色
+        }),
+        new THREE.MeshBasicMaterial({
+          color: "#ccc", //三角面颜色
+        }),
+      ];
+      this.floorMesh = new THREE.Mesh(geometry, materials); //网格模型对象Mesh
       this.floorMesh.rotateX(Math.PI / 2);
       this.scene.add(this.floorMesh); //网格模型添加到场景中
     },
@@ -613,7 +713,7 @@ export default {
       border: 0px solid;
       border-radius: 0;
       width: 100px;
-          padding: 0;
+      padding: 0;
       i {
         margin-right: 4px;
       }

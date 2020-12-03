@@ -124,8 +124,8 @@ export const listSearch = {
       let material = new THREE.MeshLambertMaterial({
         color: '#fff',
         side: THREE.DoubleSide, //两面可见
-        // transparent: true,
-        // opacity:0.1,
+        transparent: true,
+        opacity:0,
       }) //材质对象Material
       let mesh = new THREE.Mesh(geometry, material) //网格模型对象Mesh
       mesh.position.set(0, -0.01, 0)
@@ -184,10 +184,10 @@ export const listSearch = {
       //   1 / threeDom.getBoundingClientRect().width,
       //   1 / threeDom.getBoundingClientRect().height
       // );
-      console.log(
-        threeDom.getBoundingClientRect().width,
-        threeDom.getBoundingClientRect().height
-      )
+      // console.log(
+      //   threeDom.getBoundingClientRect().width,
+      //   threeDom.getBoundingClientRect().height
+      // )
       // this.composer.addPass(FXAAShaderPass);
     },
     setSelectedObjectsAdd(intersects, flag) {

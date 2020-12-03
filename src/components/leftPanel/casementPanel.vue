@@ -22,128 +22,6 @@
 
     <dialogp :id="layerId" @queryDialog="queryDialog">
       <el-collapse v-model="activeNames" @change="handleChange" accordion>
-        <el-collapse-item title="选中的窗口" name="选中的窗口">
-          <el-row>
-            <span class="inputName">几何体：</span>
-            <el-input
-              v-model="selectCasementTypeName"
-              placeholder="未选择"
-              disabled
-            ></el-input>
-          </el-row>
-          <div class="changeSizeArea" v-if="GeometryType === '长方体'">
-            <el-row>
-              <span class="inputName">名称：</span>
-              <el-input
-                v-model="selectCasementName"
-                placeholder="未选择"
-                :disabled="!allowModification"
-              ></el-input>
-            </el-row>
-            <div class="option-list">长</div>
-            <div class="option-list">宽</div>
-            <div class="option-list">高</div>
-            <div class="option-list" style="padding-left: 0">
-              <avue-input-number
-                v-model="selectCasementSizeL"
-                @change="handleChangeSizeL"
-                :disabled="!allowModification"
-              ></avue-input-number>
-            </div>
-            <div class="option-list">
-              <avue-input-number
-                v-model="selectCasementSizeW"
-                @change="handleChangeSizeW"
-                :disabled="!allowModification"
-              ></avue-input-number>
-            </div>
-            <div class="option-list">
-              <avue-input-number
-                v-model="selectCasementSizeH"
-                @change="handleChangeSizeH"
-                :disabled="!allowModification"
-              ></avue-input-number>
-            </div>
-          </div>
-
-          <el-row>
-            <div class="option-list">x坐标</div>
-            <div class="option-list">y坐标</div>
-            <div class="option-list">z坐标</div>
-            <div class="option-list" style="padding-left: 0">
-              <avue-input-number
-                v-model="selectCasementPositonX"
-                @change="handleChangePositonX"
-                :disabled="!allowModification"
-              ></avue-input-number>
-            </div>
-            <div class="option-list">
-              <avue-input-number
-                v-model="selectCasementPositonY"
-                @change="handleChangePositonY"
-                :disabled="!allowModification"
-              ></avue-input-number>
-            </div>
-            <div class="option-list">
-              <avue-input-number
-                v-model="selectCasementPositonZ"
-                @change="handleChangePositonZ"
-                :disabled="!allowModification"
-              ></avue-input-number>
-            </div>
-          </el-row>
-          <div class="angle-block">
-            <div class="block angle-box">角度</div>
-            <div class="block">
-              <span class="demonstration">X：</span>
-              <el-slider
-                @change="changeAngleX"
-                v-model="selectCasementAngleX"
-                :disabled="!allowModification"
-                class="angle-slider"
-                show-input
-                :max="360"
-              ></el-slider>
-            </div>
-            <div class="block">
-              <span class="demonstration">Y：</span>
-              <el-slider
-                @change="changeAngleY"
-                v-model="selectCasementAngleY"
-                :disabled="!allowModification"
-                class="angle-slider"
-                show-input
-                :max="360"
-              ></el-slider>
-            </div>
-            <div class="block">
-              <span class="demonstration">Z：</span>
-              <el-slider
-                @change="changeAngleZ"
-                v-model="selectCasementAngleZ"
-                :disabled="!allowModification"
-                class="angle-slider"
-                show-input
-                :max="360"
-              ></el-slider>
-            </div>
-          </div>
-
-          <el-row>
-            <div>颜色</div>
-            <avue-input-color
-              placeholder="请选择"
-              v-model="SelectCasementColor"
-              :disabled="!allowModification"
-
-              @change="ChangeCasementColor"
-            ></avue-input-color>
-          </el-row>
-          <el-row class="btn-list">
-            <el-button size="small" @click="modifyCasement">{{ allowModification ? '确定' : '修改'}}</el-button>
-            <el-button size="small">删除</el-button>
-          </el-row>
-        </el-collapse-item>
         <el-collapse-item title="增加窗口" name="增加窗口">
           <el-select v-model="GeometryType" placeholder="请选择">
             <el-option
@@ -167,13 +45,13 @@
             <div class="option-list">宽</div>
             <div class="option-list">高</div>
             <div class="option-list" style="padding-left: 0">
-              <avue-input-number v-model="casementSizeL"></avue-input-number>
+              <avue-input-number v-model="casementSizeL" @change="handleChangeSizeL"></avue-input-number>
             </div>
             <div class="option-list">
-              <avue-input-number v-model="casementSizeW"></avue-input-number>
+              <avue-input-number v-model="casementSizeW" @change="handleChangeSizeW"></avue-input-number>
             </div>
             <div class="option-list">
-              <avue-input-number v-model="casementSizeH"></avue-input-number>
+              <avue-input-number v-model="casementSizeH" @change="handleChangeSizeH"></avue-input-number>
             </div>
           </div>
 
@@ -182,13 +60,13 @@
             <div class="option-list">y坐标</div>
             <div class="option-list">z坐标</div>
             <div class="option-list" style="padding-left: 0">
-              <avue-input-number v-model="casementPositonX"></avue-input-number>
+              <avue-input-number v-model="casementPositonX" @change="handleChangePositonX"></avue-input-number>
             </div>
             <div class="option-list">
-              <avue-input-number v-model="casementPositonY"></avue-input-number>
+              <avue-input-number v-model="casementPositonY" @change="handleChangePositonY"></avue-input-number>
             </div>
             <div class="option-list">
-              <avue-input-number v-model="casementPositonZ"></avue-input-number>
+              <avue-input-number v-model="casementPositonZ" @change="handleChangePositonZ"></avue-input-number>
             </div>
           </el-row>
           <div class="angle-block">
@@ -197,6 +75,7 @@
               <span class="demonstration">X：</span>
               <el-slider
                 v-model="casementAngleX"
+                @change="changeAngleX"
                 class="angle-slider"
                 show-input
                 :max="360"
@@ -206,6 +85,7 @@
               <span class="demonstration">Y：</span>
               <el-slider
                 v-model="casementAngleY"
+                @change="changeAngleY"
                 class="angle-slider"
                 show-input
                 :max="360"
@@ -215,6 +95,7 @@
               <span class="demonstration">Z：</span>
               <el-slider
                 v-model="casementAngleZ"
+                @change="changeAngleZ"
                 class="angle-slider"
                 show-input
                 :max="360"
@@ -227,6 +108,7 @@
             <avue-input-color
               placeholder="请选择颜色"
               v-model="casementColor"
+              @change="ChangeCasementColor"
             ></avue-input-color>
           </el-row>
           <el-button
@@ -278,174 +160,6 @@ export default {
     dialogp,
   },
   mixins: [listSearchMixin],
-  computed: {
-    selectCasementTypeName() {
-      if (this.selectCasementMeth) {
-        return this.selectCasementMeth.typeName;
-      } else {
-        return "";
-      }
-    },
-    selectCasementName() {
-      if (this.selectCasementMeth) {
-        return this.selectCasementMeth.name;
-      } else {
-        return "";
-      }
-    },
-    selectCasementSizeH: {
-      get() {
-        if (this.selectCasementMeth) {
-          return this.selectCasementMeth.data.height;
-        } else {
-          return 0;
-        }
-      },
-      set(val) {
-        console.log("神奇1", val);
-        if(this.selectCasementMeth) {
-          this.selectCasementMeth.data.height = val;
-        }
-      },
-    },
-    selectCasementSizeW: {
-      get() {
-        if (this.selectCasementMeth) {
-          return this.selectCasementMeth.data.width;
-        } else {
-          return 0;
-        }
-      },
-      set(val) {
-        console.log("神奇2", val);
-        if(this.selectCasementMeth) {
-          this.selectCasementMeth.data.width = val;
-        }
-      },
-    },
-    selectCasementSizeL: {
-      get() {
-        if (this.selectCasementMeth) {
-          return this.selectCasementMeth.data.length;
-        } else {
-          return 0;
-        }
-      },
-      set(val) {
-        console.log("神奇3", val);
-        if(this.selectCasementMeth) {
-          this.selectCasementMeth.data.length = val;
-        }
-      },
-    },
-    selectCasementPositonX: {
-      get() {
-        if (this.selectCasementMeth) {
-          return this.selectCasementMeth.data.x;
-        } else {
-          return 0;
-        }
-      },
-      set(val) {
-        console.log("神奇11", val);
-        if(this.selectCasementMeth) {
-          this.selectCasementMeth.data.x = val;
-        }
-      },
-    },
-    selectCasementPositonY: {
-      get() {
-        if (this.selectCasementMeth) {
-          return this.selectCasementMeth.data.y;
-        } else {
-          return 0;
-        }
-      },
-      set(val) {
-        console.log("神奇11", val);
-        if(this.selectCasementMeth){
-          this.selectCasementMeth.data.y = val;
-        }
-      },
-    },
-    selectCasementPositonZ: {
-      get() {
-        if (this.selectCasementMeth) {
-          return this.selectCasementMeth.data.z;
-        } else {
-          return 0;
-        }
-      },
-      set(val) {
-        console.log("神奇11", val);
-        if(this.selectCasementMeth){
-          this.selectCasementMeth.data.z = val;
-        }
-        
-      },
-    },
-    selectCasementAngleX: {
-      get() {
-        if (this.selectCasementMeth) {
-          return this.selectCasementMeth.data.rotationX;
-        } else {
-          return 0;
-        }
-      },
-      set(val) {
-        console.log("神奇111", val);
-        if (this.selectCasementMeth) {
-          this.selectCasementMeth.data.rotationX = val;
-        }
-      },
-    },
-    selectCasementAngleY: {
-      get() {
-        if (this.selectCasementMeth) {
-          return this.selectCasementMeth.data.rotationY;
-        } else {
-          return 0;
-        }
-      },
-      set(val) {
-        console.log("神奇111", val);
-        if (this.selectCasementMeth) {
-          this.selectCasementMeth.data.rotationY = val;
-        }
-      },
-    },
-    selectCasementAngleZ: {
-      get() {
-        if (this.selectCasementMeth) {
-          return this.selectCasementMeth.data.rotationZ;
-        } else {
-          return 0;
-        }
-      },
-      set(val) {
-        console.log("神奇111", val);
-        if (this.selectCasementMeth) {
-          this.selectCasementMeth.data.rotationZ = val;
-        }
-      },
-    },
-    SelectCasementColor: {
-      get() {
-        if (this.selectCasementMeth) {
-          return this.selectCasementMeth.data.color;
-        } else {
-          return "";
-        }
-      },
-      set(val) {
-        console.log("神奇1111", val);
-        if (this.selectCasementMeth) {
-          this.selectCasementMeth.data.color = val;
-        }
-
-      },
-    },
-  },
   data: () => {
     return {
       content: "",
@@ -497,6 +211,7 @@ export default {
       allowModification: false
     };
   },
+
   created() {
     let date = new Date();
     let name =
@@ -720,6 +435,23 @@ export default {
       this.$emit("getChildData", parendData);
     },
   },
+  watch: {
+    selectCasementMeth(val) {
+      // console.log(val)
+      if(val) {
+        this.casementSizeH = val.data.height;
+      this.casementSizeW = val.data.width;
+      this.casementSizeL = val.data.length;
+      this.casementPositonX = val.data.x;
+      this.casementPositonY = val.data.y;
+      this.casementPositonZ = val.data.z;
+      this.casementAngleX = val.data.rotationX;
+      this.casementAngleY = val.data.rotationY;
+      this.casementAngleZ = val.data.rotationZ;
+      }
+      
+    }
+  }
 };
 </script>
 

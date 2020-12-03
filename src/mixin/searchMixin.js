@@ -204,7 +204,7 @@ export const listSearch = {
       } else {
         this.OutlinePass.selectedObjects = [mesh];
       }
-      console.log(this.OutlinePass.selectedObjects)
+      // console.log(this.OutlinePass.selectedObjects)
       this.scene.updateMatrixWorld(true)
       var worldPosition = new THREE.Vector3()
       mesh.getWorldPosition(worldPosition)
@@ -223,6 +223,21 @@ export const listSearch = {
         this.mousemoveSelectCasementGrrove,
         false
       )
+    },
+    remomveSelectCasementGrrove() {
+      let threeDom = document.getElementById('cesiumContainer')
+      threeDom.removeEventListener(
+        'click',
+        this.clickSelectCasementGrrove,
+        false
+      )
+      threeDom.removeEventListener(
+        'mousemove',
+        this.mousemoveSelectCasementGrrove,
+        false
+      )
+      threeDom.removeEventListener("click", this.clickSelectWall, false);
+      threeDom.removeEventListener("mousemove", this.mousemoveSelectWall, false);
     },
   },
 

@@ -36,10 +36,10 @@
         <span class="inputName">名称：</span>
         <el-input v-model="wallName" placeholder="请输入内容"></el-input>
       </el-row>
-      
+
       <div class="changeSizeArea" v-if="GeometryType === '四边形'">
         <div class="option-list" style="padding-left: 0">
-          <avue-input-number v-model="drawSizeH"></avue-input-number>
+          <avue-input-number v-model="drawSizeL"></avue-input-number>
           <span class="inputName">长：</span>
         </div>
         <div class="option-list">
@@ -47,11 +47,43 @@
           <span class="inputName">宽：</span>
         </div>
       </div>
+      <div class="changeSizeArea" v-if="GeometryType === '四边形'">
+        <div class="option-list" style="padding-left: 0">
+          <avue-input-number v-model="drawSizeH"></avue-input-number>
+          <span class="inputName">高：</span>
+        </div>
+        <div class="option-list">
+          <avue-input-number v-model="drawSizeT"></avue-input-number>
+          <span class="inputName">厚：</span>
+        </div>
+      </div>
+      <el-row>
+        <div>颜色</div>
+        <avue-input-color
+          placeholder="请选择颜色"
+          v-model="wallColor"
+          @change="ChangeWallColor"
+        ></avue-input-color>
+      </el-row>
       <el-row class="btn-list">
-        <el-button size="small" v-if="GeometryType !== '绘画'" disabled>{{threePoints.length > 0 ? '删除' : '增加'}}</el-button>
-        <el-button size="small" v-if="GeometryType === '绘画'" disabled>撤销</el-button>
-        <el-button size="small" v-if="GeometryType === '绘画'" @click="painting">重绘</el-button>
-        <el-button size="small" v-if="GeometryType === '绘画'" @click="wallClose">闭合</el-button>
+        <el-button
+          size="small"
+          v-if="GeometryType !== '绘画'"
+          @click="addBaseWall"
+          >{{ threePoints.length > 0 ? "删除" : "增加" }}</el-button
+        >
+        <el-button size="small" v-if="GeometryType === '绘画'" disabled
+          >撤销</el-button
+        >
+        <el-button size="small" v-if="GeometryType === '绘画'" @click="painting"
+          >重绘</el-button
+        >
+        <el-button
+          size="small"
+          v-if="GeometryType === '绘画'"
+          @click="wallClose"
+          >闭合</el-button
+        >
       </el-row>
     </dialogp>
   </div>
@@ -76,14 +108,19 @@ export default {
   data: () => {
     return {
       content: "",
-      layerId: Math.random().toString(36).substr(3, 10),
+      layerId: Math.random()
+        .toString(36)
+        .substr(3, 10),
       drawPoint: [],
       drawIng: false,
       layerOpen: null,
       parendData: {},
-      drawSizeH: 6,
+      drawSizeL: 6,
       drawSizeW: 10,
+      drawSizeH: 3,
+      wallColor: "rgba(32, 76, 159, 0.6)",
       activeIndex: 0,
+      drawSizeT: 0.2,
       data: [
         {
           name: "基础墙体",
@@ -110,20 +147,11 @@ export default {
         },
       ],
       GeometrySelect: null,
+      wallName: "",
     };
   },
   created() {
-    let date = new Date();
-    let name =
-      "墙_" +
-      date.getFullYear() +
-      (date.getMonth() + 1) +
-      date.getDate() +
-      date.getHours() +
-      date.getMinutes() +
-      date.getSeconds();
-    this.wallName = name;
-    // console.log("this.data", this.data);
+    this.wallName = this.setlName("墙_");
   },
   methods: {
     painting() {
@@ -177,6 +205,31 @@ export default {
 
       this.$emit("getChildData", this.parendData);
     },
+    ChangeWallColor(val) {
+      if (val) {
+        let parendData = {
+          changeType: "material",
+          changeTaget: "color",
+          changeData: val,
+          changeName: "修改墙体颜色",
+        };
+        this.$emit("getChildData", parendData);
+      }
+    },
+    addBaseWall() {
+      let data = {
+        name: "增加墙",
+        parentName: "wall",
+        drawSizeL: this.drawSizeL,
+        drawSizeW: this.drawSizeW,
+        drawSizeH: this.drawSizeH,
+        drawSizeT: this.drawSizeT,
+        wallColor: this.wallColor,
+        wallName: this.wallName,
+      };
+      this.$emit("getChildData", data);
+      this.wallName = this.setlName("墙_");
+    },
   },
   watch: {
     threePoints(val) {
@@ -209,7 +262,7 @@ export default {
         //   h: (Xmax - Xmin).toFixed(2),
         // };
         this.drawSizeW = (Hmax - Hmin).toFixed(2);
-        this.drawSizeH = (Xmax - Xmin).toFixed(2);
+        this.drawSizeL = (Xmax - Xmin).toFixed(2);
       }
     },
   },

@@ -213,16 +213,8 @@ export default {
   },
 
   created() {
-    let date = new Date();
-    let name =
-      "窗户_" +
-      date.getFullYear() +
-      (date.getMonth() + 1) +
-      date.getDate() +
-      date.getHours() +
-      date.getMinutes() +
-      date.getSeconds();
-    this.casementName = name;
+
+    this.casementName = this.setlName("窗户_");
     console.log("this.data", this.data);
   },
   methods: {
@@ -260,16 +252,7 @@ export default {
         data: this.setData(),
       };
       this.$emit("getChildData", parendData);
-      let date = new Date();
-      let name =
-        "窗户_" +
-        date.getFullYear() +
-        (date.getMonth() + 1) +
-        date.getDate() +
-        date.getHours() +
-        date.getMinutes() +
-        date.getSeconds();
-      this.casementName = name;
+      this.casementName = this.setlName("窗户_");
     },
     modifyCasement(type) {
       if(this.selectCasementName) {

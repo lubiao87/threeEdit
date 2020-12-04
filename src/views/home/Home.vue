@@ -320,6 +320,11 @@ export default {
             let threeDom2 = document.getElementById("cesiumContainer");
             threeDom2.removeEventListener("click", this.addSpritePoint, false);
             break;
+          case "增加墙":
+            console.log("增加墙", data);
+            this.cursorName = "auto";
+
+            break;
           case "选择地板":
             console.log("选择地板", data);
             this.newFloorTexture(data);
@@ -474,55 +479,7 @@ export default {
         this.pointList[this.pointList.length - 1],
         point,
       ]);
-      let p1 = this.pointList[this.pointList.length - 1],
-        p2 = point;
-      // var p1 = this.pointList[this.pointList.length - 1];
-      // var p2 = point;
-      // var p3 = new THREE.Vector3(point.x, point.y + 3, point.z);
-      // var p4 = new THREE.Vector3(this.pointList[this.pointList.length - 1].x, point.y + 3, this.pointList[this.pointList.length - 1].z);
-      var vertices = new Float32Array([
-        p1.x,
-        p1.y,
-        p1.z, //顶点1坐标
-        p2.x,
-        p2.y,
-        p2.z, //顶点2坐标
-        p2.x,
-        p2.y + 3,
-        p2.z, //顶点3坐标
-        p2.x,
-        p2.y + 3,
-        p2.z, //顶点3坐标
-        p1.x,
-        p1.y + 3,
-        p1.z, //顶点5坐标
-        p1.x,
-        p1.y,
-        p1.z, //顶点1坐标
-      ]);
-      var points = [
-        new THREE.Vector3(p1.x, p1.y, p1.z),
-        new THREE.Vector3(p2.x, p2.y, p2.z),
-        new THREE.Vector3(p2.x, p2.y + 3, p2.z),
-        new THREE.Vector3(p1.x, p1.y + 3, p1.z),
-        new THREE.Vector3(p1.x, p1.y, p1.z),
-      ];
-      // 通过顶点定义轮廓
-      var shape2 = new THREE.Shape(points);
-      // var attribue = new THREE.BufferAttribute(vertices, 3); //3个为一组，表示一个顶点的xyz坐标
-      // 通过顶点定义轮廓
-      // var shape2 = new THREE.Shape(points2);
-      // var geometry2 = new THREE.ShapeGeometry(shape2, 25);
-      var geometry2 = new THREE.ExtrudeGeometry( //拉伸造型
-        shape2, //二维轮廓
-        //拉伸参数
-        {
-          amount: -0.05, //拉伸长度
-          bevelEnabled: false, //无倒角
-        }
-      );
-      // geometry2.attributes.position = attribue;
-      // console.log(points2);
+
 
       var textureLoader = new THREE.TextureLoader();
       // // 加载纹理贴图
@@ -535,17 +492,9 @@ export default {
       texture.wrapT = THREE.RepeatWrapping;
       // uv两个方向纹理重复数量
       texture.repeat.set(1, 1);
-      var material2 = new THREE.MeshPhongMaterial({
-        map: texture, // 普通纹理贴图
-        bumpMap: textureBump, //凹凸贴图
-        bumpScale: 3, //设置凹凸高度，默认值1。
-        side: THREE.DoubleSide, //两面可见
-      }); //材质对象
-      let wallMesh2 = new THREE.Mesh(geometry2, material2); //网格模型对象
 
       var geometry = new THREE.ExtrudeGeometry( //拉伸造型
         shape, //二维轮廓
-        //拉伸参数
         {
           bevelEnabled: false, //无倒角
           extrudePath: curve, //选择扫描轨迹
@@ -555,10 +504,10 @@ export default {
       var material = new THREE.MeshPhongMaterial({
         color: "#666",
       }); //材质对象
+
       let wallMesh = new THREE.Mesh(geometry, material); //网格模型对象
       wallMesh.name = "墙壁" + this.pointList.length;
       this.WallGroup.add(wallMesh);
-      // this.WallGroup.add(wallMesh2);
     },
     newFloorTexture(data) {
       if (this.floorMesh) {
@@ -585,7 +534,6 @@ export default {
           bevelEnabled: false, //无倒角
         }
       );
-      // var geometry = new THREE.PlaneGeometry(20, 10); //矩形平面
       // TextureLoader创建一个纹理加载器对象，可以加载图片作为几何体纹理
       let textureLoader = new THREE.TextureLoader();
       // 执行load方法，加载纹理贴图成功后，返回一个threejs对象Texture

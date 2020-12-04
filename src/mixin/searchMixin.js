@@ -239,6 +239,18 @@ export const listSearch = {
       threeDom.removeEventListener("click", this.clickSelectWall, false);
       threeDom.removeEventListener("mousemove", this.mousemoveSelectWall, false);
     },
+    setlName(val) {
+      let date = new Date();
+      let name =
+        val +
+        date.getFullYear() +
+        (date.getMonth() + 1) +
+        date.getDate() +
+        date.getHours() +
+        date.getMinutes() +
+        date.getSeconds();
+      return name;
+    },
   },
 
   // created() {

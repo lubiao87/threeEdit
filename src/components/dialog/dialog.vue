@@ -61,12 +61,12 @@ export default {
       var distanceY = event.clientY - this.selectElement.offsetTop;
       // console.log(distanceX)
       // console.log(distanceY)
-      document.onmousemove = function (ev) {
+      document.onmousemove = function(ev) {
         var oevent = ev || event;
         div1.style.left = oevent.clientX - distanceX + "px";
         div1.style.top = oevent.clientY - distanceY + "px";
       };
-      document.onmouseup = function () {
+      document.onmouseup = function() {
         document.onmousemove = null;
         document.onmouseup = null;
         div1.style.cursor = "default";
@@ -94,14 +94,17 @@ h2 {
 }
 .el-container {
   position: fixed;
-  height: 500px;
-  width: 300px;
+  min-height: 300px;
+  max-height: 500px;
+  min-width: 240px;
   border: 1px;
   top: 60px;
   right: 0;
   border-radius: 2px;
   z-index: 2;
   border: 1px solid;
+  height: 90%;
+  width: 30%;
 }
 
 .dialog-footer {
@@ -126,6 +129,4 @@ h2 {
 .el-aside {
   color: #333;
 }
-
-
 </style>

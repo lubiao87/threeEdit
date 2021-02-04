@@ -27,7 +27,7 @@
 <script>
 // import { Message } from 'element-ui';
 
-import { ChangeSlowly } from "@/map/vrSphereAnimat";
+// import { ChangeSlowly } from "@/map/vrSphereAnimat";
 import progressPage from "@/components/progress/progressPage";
 import hearder from "@/components/hearder/hearder";
 import leftPanel from "@/components/leftPanel/leftPanel";
@@ -323,7 +323,7 @@ export default {
           case "增加墙":
             console.log("增加墙", data);
             this.cursorName = "auto";
-
+            this.newWallQuadrilateral(data);
             break;
           case "选择地板":
             console.log("选择地板", data);
@@ -480,7 +480,6 @@ export default {
         point,
       ]);
 
-
       var textureLoader = new THREE.TextureLoader();
       // // 加载纹理贴图
       var texture = textureLoader.load("./img/wall/diffuse.jpg");
@@ -576,6 +575,47 @@ export default {
       this.floorMesh = new THREE.Mesh(geometry, materials); //网格模型对象Mesh
       this.floorMesh.rotateX(Math.PI / 2);
       this.scene.add(this.floorMesh); //网格模型添加到场景中
+    },
+    newWallQuadrilateral(data) {
+      // 矩形嵌套矩形或圆弧
+      var shape = new THREE.Shape(); //Shape对象
+      //外轮廓
+      shape.moveTo(0 - data.drawSizeL / 2, 0 - data.drawSizeW / 2); //起点
+      shape.lineTo(0 - data.drawSizeL / 2, data.drawSizeW - data.drawSizeW / 2); //第2点
+      shape.lineTo(data.drawSizeL - data.drawSizeL / 2, data.drawSizeW - data.drawSizeW / 2); //第3点
+      shape.lineTo(data.drawSizeL - data.drawSizeL / 2, 0 - data.drawSizeW / 2); //第4点
+      shape.lineTo(0 - data.drawSizeL / 2, 0 - data.drawSizeW / 2); //第5点
+      //
+      //内轮廓
+      var path = new THREE.Path(); //path对象
+      //  path.arc(50,50,40,0,2*Math.PI);//圆弧
+      path.moveTo(data.drawSizeT - data.drawSizeL / 2, data.drawSizeT - data.drawSizeW / 2); //起点
+      path.lineTo(data.drawSizeT - data.drawSizeL / 2, data.drawSizeW - data.drawSizeT - data.drawSizeW / 2); //第2点
+      path.lineTo(data.drawSizeL - data.drawSizeT - data.drawSizeL / 2, data.drawSizeW - data.drawSizeT - data.drawSizeW / 2); //第3点
+      path.lineTo(data.drawSizeL - data.drawSizeT - data.drawSizeL / 2, data.drawSizeT - data.drawSizeW / 2); //第4点
+      path.lineTo(data.drawSizeT - data.drawSizeL / 2, data.drawSizeT - data.drawSizeW / 2); //第5点
+      shape.holes.push(path); //设置内轮廓
+
+      var geometry = new THREE.ExtrudeGeometry( //拉伸造型
+        shape, //二维轮廓
+        //拉伸参数
+        {
+          amount: data.drawSizeH, //拉伸长度
+          curveSegments: 40, //圆周方向细分数
+          bevelEnabled: false, //无倒角
+        }
+      );
+      var material = new THREE.MeshPhongMaterial({
+        color: data.wallColor,
+        side: THREE.DoubleSide, //两面可见
+        transparent: true,
+        opacity: parseFloat(data.wallColor.split(',')[3].split(')')[0])
+      }); //材质对象
+      var mesh = new THREE.Mesh(geometry, material); //网格模型对象
+      mesh.rotateX(-Math.PI / 2);
+      this.WallGroup.children = [];
+      mesh.name = "四边形墙体";
+      this.WallGroup.add(mesh); //网格模型添加到场景中
     },
   },
   // watch: {

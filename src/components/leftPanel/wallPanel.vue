@@ -122,15 +122,16 @@ export default {
       activeIndex: 0,
       drawSizeT: 0.2,
       data: [
+        
         {
-          name: "基础墙体",
-          url: "img/wall/wall.png",
+          name: "自定义墙体",
+          url: "img/wall/wall2.png",
           size: [1, 1],
           parentName: "wall",
         },
         {
-          name: "贴图1墙体",
-          url: "img/wall/wall2.png",
+          name: "模型1",
+          url: "img/wall/wall.png",
           size: [1, 1],
           parentName: "wall",
         },
@@ -169,12 +170,15 @@ export default {
       this.$emit("getChildData", this.parendData);
     },
     changeWall(data, i) {
+      
       this.activeIndex = i;
       this.parendData = {
-        name: "修改墙轮廓",
+        name: data.name,
         parentName: "wall",
         data: data,
+        custom: data.name === "自定义轮廓" 
       };
+      // console.log(data)
       this.$emit("getChildData", this.parendData);
       this.Set_DialogVisible(true);
     },
@@ -226,6 +230,7 @@ export default {
         drawSizeT: this.drawSizeT,
         wallColor: this.wallColor,
         wallName: this.wallName,
+        GeometryType: this.GeometryType
       };
       this.$emit("getChildData", data);
       this.wallName = this.setlName("墙_");

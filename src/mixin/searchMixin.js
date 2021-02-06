@@ -116,7 +116,7 @@ export const listSearch = {
       if (options.addMesh) {
         this.casementGroup.add(mesh)
       }
-
+      console.log(mesh)
       return mesh
     },
     addTexture() {

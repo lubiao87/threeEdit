@@ -42,7 +42,7 @@ export default {
     hearder,
     leftPanel,
   },
-  data: function(params) {
+  data: function (params) {
     return {
       photosphereShow: "none",
       camera: null,
@@ -324,6 +324,7 @@ export default {
             console.log("增加墙", data);
             this.cursorName = "auto";
             this.newWallQuadrilateral(data);
+            
             break;
           case "选择地板":
             console.log("选择地板", data);
@@ -430,6 +431,23 @@ export default {
             // }
 
             break;
+        }
+        if (data.custom === false) {
+          console.log(data);
+          var loader = new THREE.GLTFLoader();
+          loader.load(
+            "./building.gltf",
+            (gltf) => {
+              console.log(gltf);
+              gltf.scene.rotateY(Math.PI / 12);
+              // gltf.scene.translateZ(15);
+              // gltf.scene.translateX(-5);
+              this.scene.add(gltf.scene);
+            },
+            (onProgress) => {
+              console.log(onProgress);
+            }
+          );
         }
       }
       if (data.changeName) {
@@ -582,18 +600,36 @@ export default {
       //外轮廓
       shape.moveTo(0 - data.drawSizeL / 2, 0 - data.drawSizeW / 2); //起点
       shape.lineTo(0 - data.drawSizeL / 2, data.drawSizeW - data.drawSizeW / 2); //第2点
-      shape.lineTo(data.drawSizeL - data.drawSizeL / 2, data.drawSizeW - data.drawSizeW / 2); //第3点
+      shape.lineTo(
+        data.drawSizeL - data.drawSizeL / 2,
+        data.drawSizeW - data.drawSizeW / 2
+      ); //第3点
       shape.lineTo(data.drawSizeL - data.drawSizeL / 2, 0 - data.drawSizeW / 2); //第4点
       shape.lineTo(0 - data.drawSizeL / 2, 0 - data.drawSizeW / 2); //第5点
       //
       //内轮廓
       var path = new THREE.Path(); //path对象
       //  path.arc(50,50,40,0,2*Math.PI);//圆弧
-      path.moveTo(data.drawSizeT - data.drawSizeL / 2, data.drawSizeT - data.drawSizeW / 2); //起点
-      path.lineTo(data.drawSizeT - data.drawSizeL / 2, data.drawSizeW - data.drawSizeT - data.drawSizeW / 2); //第2点
-      path.lineTo(data.drawSizeL - data.drawSizeT - data.drawSizeL / 2, data.drawSizeW - data.drawSizeT - data.drawSizeW / 2); //第3点
-      path.lineTo(data.drawSizeL - data.drawSizeT - data.drawSizeL / 2, data.drawSizeT - data.drawSizeW / 2); //第4点
-      path.lineTo(data.drawSizeT - data.drawSizeL / 2, data.drawSizeT - data.drawSizeW / 2); //第5点
+      path.moveTo(
+        data.drawSizeT - data.drawSizeL / 2,
+        data.drawSizeT - data.drawSizeW / 2
+      ); //起点
+      path.lineTo(
+        data.drawSizeT - data.drawSizeL / 2,
+        data.drawSizeW - data.drawSizeT - data.drawSizeW / 2
+      ); //第2点
+      path.lineTo(
+        data.drawSizeL - data.drawSizeT - data.drawSizeL / 2,
+        data.drawSizeW - data.drawSizeT - data.drawSizeW / 2
+      ); //第3点
+      path.lineTo(
+        data.drawSizeL - data.drawSizeT - data.drawSizeL / 2,
+        data.drawSizeT - data.drawSizeW / 2
+      ); //第4点
+      path.lineTo(
+        data.drawSizeT - data.drawSizeL / 2,
+        data.drawSizeT - data.drawSizeW / 2
+      ); //第5点
       shape.holes.push(path); //设置内轮廓
 
       var geometry = new THREE.ExtrudeGeometry( //拉伸造型
@@ -609,7 +645,7 @@ export default {
         color: data.wallColor,
         side: THREE.DoubleSide, //两面可见
         transparent: true,
-        opacity: parseFloat(data.wallColor.split(',')[3].split(')')[0])
+        opacity: parseFloat(data.wallColor.split(",")[3].split(")")[0]),
       }); //材质对象
       var mesh = new THREE.Mesh(geometry, material); //网格模型对象
       mesh.rotateX(-Math.PI / 2);

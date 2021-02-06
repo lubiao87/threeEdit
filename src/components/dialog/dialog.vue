@@ -96,7 +96,7 @@ h2 {
   position: fixed;
   min-height: 300px;
   max-height: 500px;
-  min-width: 240px;
+  width: 340px;
   border: 1px;
   top: 60px;
   right: 0;
@@ -104,7 +104,7 @@ h2 {
   z-index: 2;
   border: 1px solid;
   height: 90%;
-  width: 30%;
+  // width: 30%;
 }
 
 .dialog-footer {

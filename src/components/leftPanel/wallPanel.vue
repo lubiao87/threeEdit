@@ -176,11 +176,11 @@ export default {
         name: data.name,
         parentName: "wall",
         data: data,
-        custom: data.name === "自定义轮廓" 
+        custom: data.name === "自定义墙体" 
       };
       // console.log(data)
       this.$emit("getChildData", this.parendData);
-      this.Set_DialogVisible(true);
+      this.Set_DialogVisible(data.name === "自定义墙体");
     },
     btnCalback(index, layero) {
       console.log(index, layero);

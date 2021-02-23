@@ -1,7 +1,7 @@
 /**
  * @author arodic / https://github.com/arodic
  */
-import * as THREE from "three";
+// import * as THREE from "three";
 (function() {
   "use strict";
 

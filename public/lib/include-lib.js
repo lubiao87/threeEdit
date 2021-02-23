@@ -77,7 +77,7 @@
       ],
       Threejs: [
         libpath + "threejs/three2.js",
-        libpath + "threejs/controls/OrbitControls.js",
+        // libpath + "threejs/controls/OrbitControls.js",
         libpath + "threejs/loaders/GLTFLoader.js",
         libpath + "threejs/loaders/OBJLoader.js",
         libpath + "threejs/WebGL.js",
@@ -88,6 +88,10 @@
         libpath + "threejs/shaders/CopyShader.js",
         // libpath + "threejs/shaders/FXAAShader.js",
         libpath + "threejs/postprocessing/OutlinePass.js",
+
+        libpath + "threejs/controls/TrackballControls.js",
+        libpath + "threejs/controls/DragControls.js",
+        libpath + "threejs/controls/TransformControls.js",
       ],
     };
 

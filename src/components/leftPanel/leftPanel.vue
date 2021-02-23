@@ -39,6 +39,7 @@
 import floorPanel from "./floorPanel";
 import wallPanel from "./wallPanel";
 import casementPanel from "./casementPanel";
+import exhibitPanel from "./exhibitPanel";
 
 import { listSearchMixin } from "../../mixin"; //混淆请求
 
@@ -47,7 +48,8 @@ export default {
   components: {
     floorPanel,
     wallPanel,
-    casementPanel
+    casementPanel,
+    exhibitPanel
   },
   mixins: [listSearchMixin],
   data() {
@@ -66,6 +68,13 @@ export default {
           title: "地板",
           name: "floor",
           componentName: "floorPanel",
+          header: "可拖拽图片到此面板增加素材",
+          
+        },
+        {
+          title: "展品",
+          name: "exhibit",
+          componentName: "exhibitPanel",
           header: "可拖拽图片到此面板增加素材",
           
         },

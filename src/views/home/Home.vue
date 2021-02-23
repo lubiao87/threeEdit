@@ -67,7 +67,6 @@ export default {
     // console.log(THREE);
     this.init();
     this.animate();
-    // console.log("this.controls", this.controls);
   },
   methods: {
     init() {
@@ -84,12 +83,6 @@ export default {
       this.camera.position = new THREE.Vector3(10, 60, 20);
       // this.camera.lookAt(new THREE.Vector3(0, 0, 0));
       this.camera.updateProjectionMatrix();
-      this.controls = new THREE.OrbitControls(
-        this.camera,
-        document.getElementById("cesiumContainer")
-      );
-      // this.controls.target.set(0, 0, 0);
-      // this.controls.update();
 
       // envmap
       let path = "textures/background/";
@@ -147,11 +140,32 @@ export default {
       this.renderer.gammaOutput = true;
 
       this.setOutlinePass();
+      this.controls = new THREE.TrackballControls(
+        this.camera,
+        this.renderer.domElement
+      );
+      // 禁止拖动
+      // this.controls.noPan = true;
+      // 视角最小距离
+
+      this.controls.minDistance = 10;
+      // 视角最远距离
+      this.controls.maxDistance = 1000;
+
       threeDom.appendChild(this.renderer.domElement);
       // this.addFloorTexture(); // 增加地板
       // this.addCircleGeometry(); // 增加vr点
       // this.addEventListenerFn(); // 绑定事件
       window.addEventListener("resize", this.onWindowResize, false);
+
+      document
+        .getElementById("cesiumContainer")
+        .addEventListener("dblclick", (event) => {
+          if(this.transformControls) {
+            this.transformControls.detach();
+          }
+          
+        });
     },
 
     animate() {
@@ -167,6 +181,8 @@ export default {
       } else {
         this.pointsIndex = 0;
       }
+      this.controls.update();
+      this.controls.handleResize();
       this.composer.render();
       requestAnimationFrame(this.animate);
 
@@ -260,6 +276,7 @@ export default {
     },
     getChildData(data) {
       // console.log("获取chidren数据", data);
+      // 创建
       if (data.parentName) {
         switch (data.name) {
           case "绘画墙轮廓":
@@ -286,23 +303,13 @@ export default {
             } else {
               this.$message.error("您还没有绘画墙轮廓呢");
             }
-            if (!this.controls) {
-              this.controls = new THREE.OrbitControls(
-                this.camera,
-                document.getElementById("cesiumContainer")
-              );
-            }
+            this.controls.enabled = true;
             this.Three_Points(this.pointList);
             break;
           case "确定墙轮廓":
             console.log("确定墙轮廓");
             this.cursorName = "auto";
-            if (!this.controls) {
-              this.controls = new THREE.OrbitControls(
-                this.camera,
-                document.getElementById("cesiumContainer")
-              );
-            }
+            this.controls.enabled = true;
             this.Three_Points(this.pointList);
             // this.pointList = [];
             let threeDom6 = document.getElementById("cesiumContainer");
@@ -311,12 +318,7 @@ export default {
           case "取消墙轮廓":
             console.log("取消墙轮廓");
             this.cursorName = "auto";
-            if (!this.controls) {
-              this.controls = new THREE.OrbitControls(
-                this.camera,
-                document.getElementById("cesiumContainer")
-              );
-            }
+            this.controls.enabled = true;
             let threeDom2 = document.getElementById("cesiumContainer");
             threeDom2.removeEventListener("click", this.addSpritePoint, false);
             break;
@@ -324,7 +326,7 @@ export default {
             console.log("增加墙", data);
             this.cursorName = "auto";
             this.newWallQuadrilateral(data);
-            
+
             break;
           case "选择地板":
             console.log("选择地板", data);
@@ -349,12 +351,7 @@ export default {
             };
             // console.log("option", option);
             this.paintGlass(option);
-            if (!this.controls) {
-              this.controls = new THREE.OrbitControls(
-                this.camera,
-                document.getElementById("cesiumContainer")
-              );
-            }
+            this.controls.enabled = true;
 
             this.cursorName = "auto";
             break;
@@ -371,10 +368,7 @@ export default {
           case "确定窗户":
             console.log("确定窗户", data);
             this.cursorName = "auto";
-            let threeDom9 = document.getElementById("cesiumContainer");
-            if (!this.controls) {
-              this.controls = new THREE.OrbitControls(this.camera, threeDom9);
-            }
+            this.controls.enabled = true;
             this.Set_DialogVisible(false);
             this.remomveSelectCasementGrrove();
             this.casementMeth = null;
@@ -406,39 +400,40 @@ export default {
               false
             );
             this.cursorName = "auto";
-            if (!this.controls) {
-              this.controls = new THREE.OrbitControls(
-                this.camera,
-                document.getElementById("cesiumContainer")
-              );
-            }
+            this.controls.enabled = true;
             break;
           case "槽具窗户":
             console.log("槽具窗户", data);
             this.casementMeth = null;
-            if (!this.controls) {
-              this.controls = new THREE.OrbitControls(
-                this.camera,
-                document.getElementById("cesiumContainer")
-              );
-            }
+            this.controls.enabled = true;
             // this.addEventSelectCasementGrrove();
             this.cursorName = "auto";
             break;
-          default:
-            // if (!this.controls) {
-            //   this.controls = new THREE.OrbitControls(this.camera,document.getElementById("cesiumContainer"));
-            // }
+          case "选择油画":
+            console.log(data);
+            this.addExhibitBox({
+              width: data.data.size[0],
+              height: data.data.size[1],
+              url: data.data.url,
+              name: data.data.name,
+            }).then((obj) => {
+              // this.selectExhibit = obj;
+              this.scene.add(obj);
+              this.dragControlsEvent(obj);
+            });
+            break;
 
+          default:
             break;
         }
-        if (data.custom === false) {
+        if (data.modelWall === false) {
           console.log(data);
           var loader = new THREE.GLTFLoader();
           loader.load(
-            "./building.gltf",
+            data.data.modelurl,
             (gltf) => {
               console.log(gltf);
+              gltf.scene.scale.set(10, 10, 10);
               gltf.scene.rotateY(Math.PI / 12);
               // gltf.scene.translateZ(15);
               // gltf.scene.translateX(-5);
@@ -450,6 +445,7 @@ export default {
           );
         }
       }
+      // 修改
       if (data.changeName) {
         switch (data.changeName) {
           case "修改窗户":

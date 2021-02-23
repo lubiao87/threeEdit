@@ -132,6 +132,7 @@ export default {
         {
           name: "模型1",
           url: "img/wall/wall.png",
+          modelurl: "model/building.gltf",
           size: [1, 1],
           parentName: "wall",
         },
@@ -176,7 +177,7 @@ export default {
         name: data.name,
         parentName: "wall",
         data: data,
-        custom: data.name === "自定义墙体" 
+        modelWall: data.name === "自定义墙体" 
       };
       // console.log(data)
       this.$emit("getChildData", this.parendData);

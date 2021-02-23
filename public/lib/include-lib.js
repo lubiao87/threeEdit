@@ -49,13 +49,13 @@
     if (libpath.lastIndexOf("/") != libpath.length - 1) libpath += "/";
 
     var libsConfig = {
-      jquery: [libpath + "jquery/jquery-2.1.4.min.js"],
-      layer: [
-        libpath + "layer/theme/default/layer.css",
-        libpath + "layer/theme/retina/retina.css",
-        libpath + "layer/theme/mars/layer.css",
-        libpath + "layer/layer.js",
-      ],
+      // jquery: [libpath + "jquery/jquery-2.1.4.min.js"],
+      // layer: [
+      //   libpath + "layer/theme/default/layer.css",
+      //   libpath + "layer/theme/retina/retina.css",
+      //   libpath + "layer/theme/mars/layer.css",
+      //   libpath + "layer/layer.js",
+      // ],
       // 'okay3d': [//三维地球“主库”
       //     libpath + "cesiumjs/Cesium/Widgets/widgets.css", //cesium
       //     libpath + "cesiumjs/Cesium/Cesium.js",
@@ -78,6 +78,7 @@
       Threejs: [
         libpath + "threejs/three2.js",
         // libpath + "threejs/controls/OrbitControls.js",
+        libpath + "threejs/controls/MapControls.js",
         libpath + "threejs/loaders/GLTFLoader.js",
         libpath + "threejs/loaders/OBJLoader.js",
         libpath + "threejs/WebGL.js",

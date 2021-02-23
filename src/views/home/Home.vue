@@ -21,6 +21,13 @@
     <!-- <div id="progressShow" v-show="baifenbiShow">
       <progress-page :baifenbi="baifenbi" />
     </div> -->
+    <div id="divmenu" class="menu" ref="divmenu">
+      <ul>
+        <li class="pub" @click="moveselectExhibit">移动</li>
+        <li class="pub">旋转</li>
+        <li class="pub">删除</li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -28,7 +35,7 @@
 // import { Message } from 'element-ui';
 
 // import { ChangeSlowly } from "@/map/vrSphereAnimat";
-import progressPage from "@/components/progress/progressPage";
+// import progressPage from "@/components/progress/progressPage";
 import hearder from "@/components/hearder/hearder";
 import leftPanel from "@/components/leftPanel/leftPanel";
 
@@ -38,7 +45,7 @@ export default {
   mixins: [listSearchMixin],
   name: "index",
   components: {
-    progressPage,
+    // progressPage,
     hearder,
     leftPanel,
   },
@@ -49,8 +56,8 @@ export default {
       renderer: null,
       scene: null,
       dataList: [],
-      baifenbi: 0, // 进度条 0 - 100
-      baifenbiShow: false,
+      // baifenbi: 0, // 进度条 0 - 100
+      // baifenbiShow: false,
       pointsIndex: 0, // 视角线进度点
       assistGroup: null,
       clearPosition: new THREE.Vector3(0, 20, 0.2),
@@ -120,6 +127,8 @@ export default {
       this.scene.add(this.WallGroup);
       this.casementGroup = new THREE.Group(); // 窗户组合
       this.scene.add(this.casementGroup);
+      this.exhibitGroup = new THREE.Group(); // 展品组合
+      this.scene.add(this.exhibitGroup);
       // model
       // let loader = new THREE.GLTFLoader();
 
@@ -140,32 +149,41 @@ export default {
       this.renderer.gammaOutput = true;
 
       this.setOutlinePass();
-      this.controls = new THREE.TrackballControls(
+      this.controls = new THREE.MapControls(
         this.camera,
         this.renderer.domElement
       );
       // 禁止拖动
       // this.controls.noPan = true;
-      // 视角最小距离
-
-      this.controls.minDistance = 10;
-      // 视角最远距离
-      this.controls.maxDistance = 1000;
+      this.controls.minDistance = 1;
+      this.controls.panSpeed = 1;// 平controls
+      this.controls.maxDistance = 100;
+      this.controls.maxPolarAngle = Math.PI / 2.2;
+      this.controls.autoRotate = true;
 
       threeDom.appendChild(this.renderer.domElement);
-      // this.addFloorTexture(); // 增加地板
-      // this.addCircleGeometry(); // 增加vr点
-      // this.addEventListenerFn(); // 绑定事件
+
       window.addEventListener("resize", this.onWindowResize, false);
 
-      document
-        .getElementById("cesiumContainer")
-        .addEventListener("dblclick", (event) => {
-          if(this.transformControls) {
-            this.transformControls.detach();
-          }
-          
-        });
+      document.addEventListener("dblclick", () => {
+        // 取消移动
+        if (this.transformControls) {
+          this.transformControls.detach();
+        }
+        this.OutlinePass.selectedObjects = [];
+        this.$refs.divmenu.style.display = "none";
+      });
+      // 右键点击
+      threeDom.oncontextmenu = (e) => {
+        e.preventDefault();
+        if (this.transformControls) {
+          this.transformControls.detach();
+        }
+        
+        this.selectExhibitEvent(e);
+
+        return false;
+      };
     },
 
     animate() {
@@ -181,8 +199,8 @@ export default {
       } else {
         this.pointsIndex = 0;
       }
-      this.controls.update();
-      this.controls.handleResize();
+      // this.controls.update();
+      // this.controls.handleResize();
       this.composer.render();
       requestAnimationFrame(this.animate);
 
@@ -417,8 +435,7 @@ export default {
               url: data.data.url,
               name: data.data.name,
             }).then((obj) => {
-              // this.selectExhibit = obj;
-              this.scene.add(obj);
+              this.exhibitGroup.add(obj);
               this.dragControlsEvent(obj);
             });
             break;
@@ -433,7 +450,7 @@ export default {
             data.data.modelurl,
             (gltf) => {
               console.log(gltf);
-              gltf.scene.scale.set(10, 10, 10);
+              // gltf.scene.scale.set(10, 10, 10);
               gltf.scene.rotateY(Math.PI / 12);
               // gltf.scene.translateZ(15);
               // gltf.scene.translateX(-5);
@@ -479,8 +496,8 @@ export default {
         this.Set_SelectCasementMeth(this.casementMeth);
       }
     },
+    // 创建墙体
     newWallMesh(point) {
-      // 创建墙体
       var shape = new THREE.Shape();
       /**四条直线绘制一个矩形轮廓*/
       shape.moveTo(0, 0); //起点
@@ -494,17 +511,17 @@ export default {
         point,
       ]);
 
-      var textureLoader = new THREE.TextureLoader();
-      // // 加载纹理贴图
-      var texture = textureLoader.load("./img/wall/diffuse.jpg");
-      // 加载凹凸贴图
-      var textureBump = textureLoader.load("./img/wall/bump.jpg");
+      // var textureLoader = new THREE.TextureLoader();
+      // // // 加载纹理贴图
+      // var texture = textureLoader.load("./img/wall/diffuse.jpg");
+      // // 加载凹凸贴图
+      // var textureBump = textureLoader.load("./img/wall/bump.jpg");
 
-      // 设置阵列模式   默认ClampToEdgeWrapping  RepeatWrapping：阵列  镜像阵列：MirroredRepeatWrapping
-      texture.wrapS = THREE.RepeatWrapping;
-      texture.wrapT = THREE.RepeatWrapping;
-      // uv两个方向纹理重复数量
-      texture.repeat.set(1, 1);
+      // // 设置阵列模式   默认ClampToEdgeWrapping  RepeatWrapping：阵列  镜像阵列：MirroredRepeatWrapping
+      // texture.wrapS = THREE.RepeatWrapping;
+      // texture.wrapT = THREE.RepeatWrapping;
+      // // uv两个方向纹理重复数量
+      // texture.repeat.set(1, 1);
 
       var geometry = new THREE.ExtrudeGeometry( //拉伸造型
         shape, //二维轮廓
@@ -649,14 +666,23 @@ export default {
       mesh.name = "四边形墙体";
       this.WallGroup.add(mesh); //网格模型添加到场景中
     },
+    // 右键点击展品
+    selectExhibitEvent(e) {
+      this.setIntersects(e, this.exhibitGroup.children, (intersects) => {
+        if (intersects.length > 0) {
+          this.$refs.divmenu.style.left = document.body.scrollLeft + e.clientX + 'px';
+          this.$refs.divmenu.style.top = document.body.scrollTop + e.clientY + 'px';
+          this.$refs.divmenu.style.display = "block";
+          this.selectExhibit = this.setSelectedObjectsAdd(intersects, false);
+        }
+      });
+    },
+    moveselectExhibit() {
+      this.dragControlsEvent(this.selectExhibit);
+      this.$refs.divmenu.style.display = "none";
+      this.OutlinePass.selectedObjects = [];
+    }
   },
-  // watch: {
-  //   casementMeth(val) {
-  //     // 小窗口现实隐藏控制视角和控制
-  //     console.log("casementMeth", val);
-  //     this.Set_SelectCasementMeth(val);
-  //   },
-  // },
 };
 </script>
 
@@ -738,6 +764,37 @@ export default {
         margin-right: 4px;
       }
     }
+  }
+  .menu {
+    width: 100px;
+    font-size: 14px;
+    font-family: "微软雅黑";
+    border: 1px solid #ccc;
+    z-index: 9999;
+    position: absolute;
+    display: none;
+    background: #f2f2f2;
+  }
+
+  .menu ul {
+    margin: 0px;
+    padding: 0px;
+    text-align: center;
+    list-style-type: none;
+  }
+
+  .menu ul li {
+    padding: 3px 0px;
+    font-size: 12px;
+  }
+
+  .menu ul li:hover {
+    background: #e1dddd;
+  }
+
+  .menu ul li a:link {
+    color: #000;
+    text-decoration: none;
   }
 }
 </style>

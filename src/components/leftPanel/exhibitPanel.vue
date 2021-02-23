@@ -17,7 +17,7 @@
       <div class="stip">
         {{ item.name }}
         <br>
-        {{ item.size[0] * 100 + ' X ' + item.size[1] * 100 }}
+        {{ item.size[0] * 1000 + ' X ' + item.size[1] * 1000 }}
       </div>
     </div>
   </div>
@@ -38,13 +38,13 @@ export default {
         {
           name: "油画1",
           url: "img/textures/1.jpeg",
-          size: [5.12, 7.81],
+          size: [0.512, 0.781],
           parentName: "floor",
         },
         {
           name: "油画2",
           url: "img/textures/2.jpeg",
-          size: [5.12, 7.28],
+          size: [0.512, 0.728],
           parentName: "floor",
         },
 

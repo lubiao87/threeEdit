@@ -260,7 +260,7 @@ export const listSearch = {
     },
     addExhibitBox(option) {
       return new Promise(function (resolve, reject) {
-        var geometry = new THREE.BoxGeometry(option.width, option.height, 0.1);
+        var geometry = new THREE.BoxGeometry(option.width, option.height, 0.01);
         var loader = new THREE.TextureLoader();
         loader.load(
           option.url,

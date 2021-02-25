@@ -74,7 +74,7 @@ export default {
     // console.log(THREE);
     this.init();
     this.animate();
-    
+
   },
   methods: {
     init() {
@@ -176,7 +176,7 @@ export default {
         if(this.$refs.divmenu) {
           this.$refs.divmenu.style.display = "none";
         }
-        
+
       });
       // 右键点击
       threeDom.oncontextmenu = (e) => {
@@ -184,7 +184,7 @@ export default {
         if (this.transformControls) {
           this.transformControls.detach();
         }
-        
+
         this.selectExhibitEvent(e);
 
         return false;
@@ -437,12 +437,19 @@ export default {
               height: data.data.size[1],
               url: data.data.url,
               name: data.data.name,
+              line: true
             }).then((obj) => {
               console.log(obj)
               this.selectExhibit = obj;
               this.exhibitGroup.add(obj);
-              this.dragControlsEvent(obj);
+              // this.dragControlsEvent(obj);
             });
+            let threeDom20 = document.getElementById("cesiumContainer");
+            threeDom20.addEventListener(
+              "mousemove",
+              this.mousemoveSelectExhibit,
+              false
+            );
             break;
 
           default:
@@ -457,7 +464,7 @@ export default {
               this.WallGroup.children = []
               gltf.scene.traverse((obj) => {
                 if (obj.type === "Mesh") {
-                  
+
                   this.WallGroup.add(obj);
                 }
               })

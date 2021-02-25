@@ -76,6 +76,7 @@
         libpath + "PhotoSphereViewer/viewer-compat.js",
       ],
       Threejs: [
+        libpath + "threejs/three.js",
         libpath + "threejs/three2.js",
         // libpath + "threejs/controls/OrbitControls.js",
         libpath + "threejs/controls/MapControls.js",

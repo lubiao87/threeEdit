@@ -6,6 +6,7 @@ export const listSearch = {
   data: function() {
     return {
       Userdata: null,
+      twoPoint: [],
     };
   },
   computed: {
@@ -145,7 +146,7 @@ export const listSearch = {
         -(event.offsetY / threeDom.getBoundingClientRect().height) * 2 + 1;
       this.raycaster.setFromCamera(this.mouse, this.camera);
 
-      let intersects = this.raycaster.intersectObjects(obj, true);
+      let intersects = this.raycaster.intersectObjects(obj, false);
       callback(intersects);
     },
     setOutlinePass() {
@@ -259,7 +260,7 @@ export const listSearch = {
       return name;
     },
     addExhibitBox(option) {
-      return new Promise(function (resolve, reject) {
+      return new Promise(function(resolve, reject) {
         var geometry = new THREE.BoxGeometry(option.width, option.height, 0.01);
         var loader = new THREE.TextureLoader();
         loader.load(
@@ -274,41 +275,155 @@ export const listSearch = {
               new THREE.MeshBasicMaterial({ map: texture }), // front
             ];
             var mesh = new THREE.Mesh(geometry, materials);
-            mesh.name = option.name || '';
-            mesh.position.set(0,option.height / 2 , 0)
-            resolve(mesh)
+            mesh.name = option.name || "";
+            mesh.position.set(0, option.height / 2, 0);
+            resolve(mesh);
           },
           (xhr) => {
             console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
           },
           (xhr) => {
-            reject(xhr)
+            reject(xhr);
           }
         );
-
-    })
-      
-      
+      });
     },
     dragControlsEvent(obj) {
-      if(this.transformControls) {
+      if (this.transformControls) {
         this.transformControls.detach();
       }
       // 添加平移控件
-      this.transformControls = new THREE.TransformControls(this.camera, this.renderer.domElement);
+      this.transformControls = new THREE.TransformControls(
+        this.camera,
+        this.renderer.domElement
+      );
       this.scene.add(this.transformControls);
       // 初始化拖拽控件
-      var dragControls = new THREE.DragControls(obj, this.camera, this.renderer.domElement);
+      var dragControls = new THREE.DragControls(
+        [obj],
+        this.camera,
+        this.renderer.domElement
+      );
       this.transformControls.attach(obj);
+      let threeDom = document.getElementById("cesiumContainer");
+
       // 开始拖拽
-      dragControls.addEventListener('dragstart',  (event) => {
-          this.controls.enabled = false;
+      dragControls.addEventListener("dragstart", (e) => {
+        console.log(111);
+        this.controls.enabled = false;
+
+        threeDom.addEventListener(
+          "mousemove",
+          this.mousemoveSelectExhibit,
+          false
+        );
       });
+      const that = this;
       // 拖拽结束
-      dragControls.addEventListener('dragend', (event) => {
-          this.controls.enabled = true;
+      dragControls.addEventListener("dragend", (event) => {
+        console.log(222);
+        this.controls.enabled = true;
+        threeDom.removeEventListener(
+          "mousemove",
+          this.mousemoveSelectExhibit,
+          false
+        );
+        this.transformControls.detach();
+        dragControls.dispose();
       });
-    }
+    },
+    mousemoveSelectExhibit(e) {
+      this.transformControls.update();
+      this.setIntersects(e, this.WallGroup.children, (intersects) => {
+        if (intersects.length > 0) {
+          this.twoPoint.push(intersects[0].point);
+          if (this.twoPoint.length > 2) {
+            this.twoPoint.splice(0, 1);
+          }
+          if (this.twoPoint.length === 2) {
+            let v1 = this.twoPoint[0];
+            let v2 = this.twoPoint[1];
+            let radina = this.getAngle(v1.x, v1.z, v2.x, v2.z);
+            console.log(this.twoPoint, radina);
+            this.selectExhibit.rotation.y = -radina;
+            var geometry = new THREE.BufferGeometry(); //声明一个空几何体对象
+            var vertices = new Float32Array([
+              v1.x,
+              v1.y,
+              v1.z, //顶点1坐标
+              v2.x,
+              v2.y,
+              v2.z, //顶点1坐标
+            ]);
+
+            // 创建属性缓冲区对象
+            var attribue = new THREE.BufferAttribute(vertices, 3); //3个为一组
+            // console.log(attribue);
+            // 设置几何体attributes属性的位置position属性
+            geometry.attributes.position = attribue;
+            let material = new THREE.PointsMaterial({
+              size: 0.1,
+              sizeAttenuation: true,
+              vertexColors: THREE.VertexColors,
+            });
+            var points = new THREE.Points(geometry, material);
+            this.scene.add(points); //网格模型添加到场景中
+          }
+        }
+      });
+    },
+    getAngle(VectorX1, VectorY1, VectorX2, VectorY2) {
+      // var x = Math.abs(VectorX2 - VectorX1);
+      // var y = Math.abs(VectorY2 - VectorY1);
+      // var radius = Math.sqrt(Math.pow(x, 2.0) + Math.pow(y, 2.0));
+      // var radina = y / radius;
+      //获得人物中心和鼠标坐标连线，与y轴正半轴之间的夹角
+      var x = Math.abs(VectorX2 - VectorX1);
+      var y = Math.abs(VectorY2 - VectorY1);
+      var z = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+      var cos = y / z;
+      var radina = Math.acos(cos); //用反三角函数求弧度
+
+      // if (VectorX2 > VectorX1 && VectorY2 > VectorY1) {
+      //   //鼠标在第四象限
+      //   radina = radina;
+      // }
+
+      // if (VectorX2 == VectorX1 && VectorY2 < VectorY1) {
+      //   //鼠标在y轴负方向上
+      //   radina = Math.PI;
+      // }
+      // if (VectorX2 == VectorX1 && VectorY2 > VectorY1) {
+      //   //鼠标在y轴负方向上
+      //   radina = 0;
+      // }
+
+      // if (VectorX2 > VectorX1 && VectorY2 == VectorY1) {
+      //   //鼠标在x轴正方向上
+      //   radina = Math.PI / 2;
+      // }
+
+      // if (VectorX2 < VectorX1 && VectorY2 > VectorY1) {
+      //   //鼠标在第三象限
+      //   radina = -radina;
+      // }
+
+      // if (VectorX2 < VectorX1 && VectorY2 == VectorY1) {
+      //   //鼠标在x轴负方向
+      //   radina = -Math.PI / 2;
+      // }
+
+      // if (VectorX2 < VectorX1 && VectorY2 < VectorY1) {
+      //   //鼠标在第二象限
+      //   radina = Math.PI + radina;
+      // }
+      // if (VectorX2 > VectorX1 && VectorY2 < VectorY1) {
+      //   //鼠标在第一象限
+      //   radina = Math.PI - radina;
+      // }
+
+      return radina ;
+    },
   },
 
   // created() {

@@ -74,6 +74,7 @@ export default {
     // console.log(THREE);
     this.init();
     this.animate();
+    
   },
   methods: {
     init() {
@@ -87,7 +88,8 @@ export default {
         1,
         1000
       );
-      this.camera.position = new THREE.Vector3(10, 60, 20);
+      // this.camera.position = new THREE.Vector3(10, 20, 20);
+      this.camera.position.set(10, 20, 20);
       // this.camera.lookAt(new THREE.Vector3(0, 0, 0));
       this.camera.updateProjectionMatrix();
 
@@ -171,7 +173,10 @@ export default {
           this.transformControls.detach();
         }
         this.OutlinePass.selectedObjects = [];
-        this.$refs.divmenu.style.display = "none";
+        if(this.$refs.divmenu) {
+          this.$refs.divmenu.style.display = "none";
+        }
+        
       });
       // 右键点击
       threeDom.oncontextmenu = (e) => {
@@ -190,7 +195,7 @@ export default {
       if (this.animatePoints) {
         if (this.pointsIndex < this.animatePoints.length - 1) {
           this.pointsIndex++;
-          this.camera.position = this.animatePoints[this.pointsIndex];
+          this.camera.position.copy(this.animatePoints[this.pointsIndex]);
         } else {
           this.animatePoints = null;
         }
@@ -199,8 +204,6 @@ export default {
       } else {
         this.pointsIndex = 0;
       }
-      // this.controls.update();
-      // this.controls.handleResize();
       this.composer.render();
       requestAnimationFrame(this.animate);
 
@@ -435,6 +438,8 @@ export default {
               url: data.data.url,
               name: data.data.name,
             }).then((obj) => {
+              console.log(obj)
+              this.selectExhibit = obj;
               this.exhibitGroup.add(obj);
               this.dragControlsEvent(obj);
             });
@@ -449,9 +454,16 @@ export default {
           loader.load(
             data.data.modelurl,
             (gltf) => {
-              console.log(gltf);
+              this.WallGroup.children = []
+              gltf.scene.traverse((obj) => {
+                if (obj.type === "Mesh") {
+                  
+                  this.WallGroup.add(obj);
+                }
+              })
+              // console.log(this.WallGroup);
               // gltf.scene.scale.set(10, 10, 10);
-              gltf.scene.rotateY(Math.PI / 12);
+              // gltf.scene.rotateY(Math.PI / 12);
               // gltf.scene.translateZ(15);
               // gltf.scene.translateX(-5);
               this.scene.add(gltf.scene);
